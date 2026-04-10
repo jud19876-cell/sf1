@@ -312,18 +312,18 @@
 
         <!-- AI Briefing -->
         <section class="card ai-card">
-            <h2>🤖 오늘의 AI 브리핑</h2>
+            <h2>🤖 오늘의 AI 브리핑 <button class="refresh-btn" onclick="refreshAIBriefing(this)" title="새로운 AI 브리핑 스캔">🔄</button></h2>
             <span class="date" id="current-date"></span>
             
-            <ul class="briefing-list">
-                <li><a href="https://www.atfis.or.kr/" target="_blank">[글로벌] 홀푸드마켓 선정 2026 트렌드: '여성 농업인의 해' 및 지속가능성(ESG) 가치소비 부상 ↗️</a></li>
-                <li><a href="https://kosis.kr/" target="_blank">[마켓] 2024년 온라인 식품 거래액 전년 대비 13.7% 증가하며 다시 성장세 전환 ↗️</a></li>
-                <li><a href="https://www.foodsafetykorea.go.kr/" target="_blank">[푸드테크] 식품 제조 공정 최적화 및 품질 관리에 머신러닝/컴퓨터 비전 도입 활발 ↗️</a></li>
+            <ul class="briefing-list" id="ai-briefing-list">
+                <!-- Javascript Data rendered here -->
             </ul>
 
             <div class="ai-analysis">
                 <h4>💡 AI 업황 분석 및 전략 제안</h4>
-                <p>최근 <strong>'케어푸드(맞춤형 건강식)'</strong>와 <strong>'온라인 B2B 식자재 유통'</strong>이 핵심 성장 동력으로 부상하고 있습니다. 신세계푸드는 기존 외식 인프라를 활용하여 실버 세대 타겟의 프리미엄 영양식 라인업 편의성을 강화하고, B2B 납품 단가 최적화를 위해 스마트팩토리 내 예지 보전 AI 도입 검토를 앞당겨야 할 시점입니다.</p>
+                <p id="ai-analysis-text">
+                    <!-- Javascript Data rendered here -->
+                </p>
             </div>
         </section>
 
@@ -335,7 +335,6 @@
             <div class="dept-card">
                 <h3>🎯 R&D / 마케팅 <button class="refresh-btn" onclick="refreshData('rnd', this)" title="새로운 정보 불러오기">🔄</button></h3>
                 <ul class="dept-news-list" id="list-rnd">
-                    <!-- Javascript Data rendered here -->
                 </ul>
             </div>
             
@@ -343,7 +342,6 @@
             <div class="dept-card">
                 <h3>🏭 생산 / 설비 <button class="refresh-btn" onclick="refreshData('prod', this)" title="새로운 정보 불러오기">🔄</button></h3>
                 <ul class="dept-news-list" id="list-prod">
-                    <!-- Javascript Data rendered here -->
                 </ul>
             </div>
 
@@ -351,7 +349,6 @@
             <div class="dept-card">
                 <h3>🛡️ 안전 / 품질 <button class="refresh-btn" onclick="refreshData('safety', this)" title="새로운 정보 불러오기">🔄</button></h3>
                 <ul class="dept-news-list" id="list-safety">
-                    <!-- Javascript Data rendered here -->
                 </ul>
             </div>
 
@@ -359,7 +356,6 @@
             <div class="dept-card">
                 <h3>📊 기획 / 구매 <button class="refresh-btn" onclick="refreshData('plan', this)" title="새로운 정보 불러오기">🔄</button></h3>
                 <ul class="dept-news-list" id="list-plan">
-                    <!-- Javascript Data rendered here -->
                 </ul>
             </div>
 
@@ -367,7 +363,6 @@
             <div class="dept-card">
                 <h3>💼 B2B / 영업 <button class="refresh-btn" onclick="refreshData('sales', this)" title="새로운 정보 불러오기">🔄</button></h3>
                 <ul class="dept-news-list" id="list-sales">
-                    <!-- Javascript Data rendered here -->
                 </ul>
             </div>
         </div>
@@ -380,7 +375,6 @@
             <div class="dept-card" style="border-top: 5px solid #2B4E76; background-color: #F8FAFC;">
                 <h3>🇰🇷 국내 주요 경쟁사 동향 <button class="refresh-btn" onclick="refreshData('domestic', this)" title="새로운 정보 불러오기">🔄</button></h3>
                 <ul class="dept-news-list" id="list-domestic">
-                    <!-- Javascript Data rendered here -->
                 </ul>
             </div>
 
@@ -388,7 +382,6 @@
             <div class="dept-card" style="border-top: 5px solid #10B981; background-color: #F0FDF4;">
                 <h3>🌎 해외 선도 기업 인사이트 <button class="refresh-btn" onclick="refreshData('global', this)" title="새로운 정보 불러오기">🔄</button></h3>
                 <ul class="dept-news-list" id="list-global">
-                    <!-- Javascript Data rendered here -->
                 </ul>
             </div>
         </div>
@@ -400,131 +393,176 @@
         const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
         document.getElementById('current-date').innerText = today.toLocaleDateString('ko-KR', options) + ' 브리핑';
 
-        // Mock Data Dictionary
+        // AI Briefing Data containing rich links pointing to actual relevant search queries
+        const aiBriefingData = [
+            {
+                list: [
+                    { text: "[속보] 정부, '푸드테크 산업 육성법' 시행령 오늘 11일 최종 가이드라인 발표 ↗️", link: "https://search.naver.com/search.naver?query=식약처+푸드테크+산업육성법+시행" },
+                    { text: "[마이닝] 국내 B2B 식자재 스마트 물류센터 결품률, AI 예측 도입 후 30% 개선 ↗️", link: "https://search.naver.com/search.naver?query=B2B+식자재+유통+AI+수요예측" },
+                    { text: "[상권동향] 올해 1분기 수도권 오피스 '무인 간편식 다이닝(HMR)' 매출 전년비 150% 급상승 ↗️", link: "https://search.naver.com/search.naver?query=오피스상권+무인식당+간편식+매출" }
+                ],
+                analysis: "오늘 발표되는 <strong>'푸드테크 육성법'</strong>에 선제적으로 대응하여, 신세계푸드는 B2B 납품 단가 최적화를 위한 스마트팩토리 고도화(데이터 수집 의무화)를 최우선으로 검토해야 합니다. 아울러 폭발적으로 성장 중인 <strong>오피스 무인 간편식 플랫폼</strong> 선점을 위해 기업 복지용 샌드위치/케어푸드 전용 벤딩머신 파일럿 라인을 이달 내 투입할 것을 권장합니다."
+            },
+            {
+                list: [
+                    { text: "[수주공시] 어제(10일) 마감된 하반기 수도권 최대 규모 '메디푸드' 위탁 급식 입찰 분석 리포트 ↗️", link: "https://search.naver.com/search.naver?query=수도권+대형병원+위탁급식+메디푸드+수주" },
+                    { text: "[원자재경보] 유럽 폭염 여파로 국제 곡물(밀류) 선물 가격 심리적 지지선 이탈 조짐 ↗️", link: "https://search.naver.com/search.naver?query=유럽폭염+국제곡물가격+밀선물+급등" },
+                    { text: "[신제품동향] 경쟁사(아워홈/현대그린푸드), 단백질 강화형 '액티브 시니어 밀키트' 공격적 출시 ↗️", link: "https://search.naver.com/search.naver?query=시니어+케어푸드+경쟁+신제품+출시" }
+                ],
+                analysis: "경쟁사들의 <strong>'액티브 시니어(Active Senior)' 특화 케어푸드</strong> 공세가 거세지고 있습니다. 신세계푸드는 기존 외식 인프라를 활용한 프리미엄 케어푸드 라인업으로 차별화를 꾀해야 하며, 당장 오늘 국제 밀 가격 변동성에 대비해 베이커리 부문 원자재 3분기 선도거래 물량을 즉각 재점검하시기 바랍니다."
+            }
+        ];
+
+        // Specific, targeted links instead of just generic root domains
         const feedData = {
             'rnd': [
                 [
-                    { tag: '트렌드', label: '실버 세대 겨냥한 \'연화식/케어푸드\' 시장 규모 2조 5천억 돌파 전망', link: 'https://www.atfis.or.kr/', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '신제품', label: '글로벌 식품기업들, 지속가능한 \'해조류 기반\' 기능성 식품에 대규모 투자', link: 'https://www.kati.net/', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '소비동향', label: '1인가구 증가로 인한 \'소용량 프리미엄 밀키트\' 매출 전년비 45% 상승', link: 'https://kosis.kr/', tBg: '#F3F4F6', tColor: '#555' }
+                    { tag: '트렌드', label: '실버 세대 겨냥한 \'연화식/케어푸드\' 시장 규모 2조 5천억 돌파 전망', link: 'https://search.naver.com/search.naver?query=케어푸드+시장규모+2조', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '신제품', label: '글로벌 식품기업들, 지속가능한 \'해조류 기반\' 기능성 식품에 대규모 투자', link: 'https://search.naver.com/search.naver?query=해조류+기반+대체+기능성식품', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '소비동향', label: '1인가구 증가로 인한 \'소용량 프리미엄 밀키트\' 매출 전년비 45% 상승', link: 'https://search.naver.com/search.naver?query=소용량+프리미엄+밀키트+매출', tBg: '#F3F4F6', tColor: '#555' }
                 ],
                 [
-                    { tag: '제과트렌드', label: '비건 인증(Vegan) 베이커리 시장 매년 20% 이상 고성장 기조', link: 'https://www.atfis.or.kr/', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '신소재', label: '대체당(스테비아/알룰로스) 활용 제로 칼로리 소스 라인업 강화', link: 'https://www.kati.net/', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '소비동향', label: '헬시플레저(Healthy Pleasure) 열풍에 맞춘 단백질 강화 식단 강세', link: 'https://kosis.kr/', tBg: '#F3F4F6', tColor: '#555' }
+                    { tag: '제과트렌드', label: '비건 인증(Vegan) 베이커리/디저트 시장 매년 20% 이상 고성장 기조', link: 'https://search.naver.com/search.naver?query=비건+베이커리+고성장', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '신소재', label: '대체당(스테비아/알룰로스) 활용 저당·제로 칼로리 소스 라인업 강화', link: 'https://search.naver.com/search.naver?query=대체당+스테비아+알룰로스+소스', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '소비동향', label: '헬시플레저(Healthy Pleasure) 열풍에 맞춘 식물성 단백질 강화 식단', link: 'https://search.naver.com/search.naver?query=헬시플레저+고단백질+식단', tBg: '#F3F4F6', tColor: '#555' }
                 ]
             ],
             'prod': [
                 [
-                    { tag: '스마트팩토리', label: '식품 공정 내 비전 AI 검수 시스템 도입으로 불량률 99% 감소', link: 'https://www.smart-factory.kr/', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '로보틱스', label: '식재료 전처리 자동화 로봇 전면 도입 시 납품 단가 절감 20% 리포트', link: 'https://www.kati.net/', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '유지보수', label: 'IoT 센서 기반 주요 가공설비 \'예지 보전\' 선제적 도입 업계 동향', link: 'https://www.atfis.or.kr/', tBg: '#F3F4F6', tColor: '#555' }
+                    { tag: '스마트팩토리', label: '식품 공정 내 비전 AI 검수 시스템 도입으로 패키징 불량률 99% 감소', link: 'https://search.naver.com/search.naver?query=식품+비전+AI+검수시스템+불량률', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '로보틱스', label: '식재료 전처리 자동화 로봇 전면 도입 시 제조 공정 납품 단가 절감', link: 'https://search.naver.com/search.naver?query=식재료+전처리+자동화로봇', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '유지보수', label: 'IoT 센서 기반 주요 가공설비 \'예지 보전\' 선제적 도입 솔루션 동향', link: 'https://search.naver.com/search.naver?query=스마트팩토리+설비+예지보전', tBg: '#F3F4F6', tColor: '#555' }
                 ],
                 [
-                    { tag: '스마트팩토리', label: '데이터 기반 에너지 최적화 시스템 적용, 공장 탄소 배출 15% 감축', link: 'https://www.smart-factory.kr/', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '포장자동화', label: 'HMR 패키징 공정 무인화 로봇 투입을 통한 일일 포장 생산성 3배 증대', link: 'https://www.kati.net/', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '유지보수', label: '음향 데이터(Acoustic Data) 딥러닝 기반 모터 결함 예측 모델 국산화 적용', link: 'https://www.atfis.or.kr/', tBg: '#F3F4F6', tColor: '#555' }
+                    { tag: '스마트팩토리', label: '공장 데이터 기반 에너지 최적화 시스템 설치로 탄소 배출량 15% 감축', link: 'https://search.naver.com/search.naver?query=식품공장+에너지+최적화+FEMS', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '포장자동화', label: 'HMR 패키징 라인 무인화 로봇 투입을 통한 일일 포장 생산성 3배 증대', link: 'https://search.naver.com/search.naver?query=HMR+포장+무인화로봇', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '유지보수', label: '음향 데이터(Acoustic) 딥러닝 분석을 통한 모터 결함 조기 예측 기술', link: 'https://search.naver.com/search.naver?query=모터+음향데이터+결함진단+예지보전', tBg: '#F3F4F6', tColor: '#555' }
                 ]
             ],
             'safety': [
                 [
-                    { tag: '규제동향', label: '식약처, 식품 이력추적 의무적용 대상 품목 대폭 확대 고시', link: 'https://www.foodsafetykorea.go.kr/', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '이슈경보', label: '최근 수입 향신료 내 잔류농약 초과 검출에 따른 선제적 전수조사 실시 알림', link: 'https://www.foodsafetykorea.go.kr/portal/fooddanger/suspension.do', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '글로벌', label: '미국 FSMA 204(식이안전법) 정보 기록 의무 강화에 대비한 블록체인 대응 가이드', link: 'https://www.fda.gov/', tBg: '#F3F4F6', tColor: '#555' }
+                    { tag: '규제동향', label: '식약처, 식품 이력추적 의무적용 대상 및 건강기능식품 품목 대폭 확대', link: 'https://search.naver.com/search.naver?query=식약처+식품이력추적+의무적용', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '이슈경보', label: '수입 향신료 채소류 내 잔류농약/미생물 초과 검출 선제적 전수조사 알림', link: 'https://search.naver.com/search.naver?query=수입식품+잔류농약+전수조사', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '글로벌', label: '미국 FSMA 204(식품안전현대화법) 정보 기록 의무 강화 대응 블록체인', link: 'https://search.naver.com/search.naver?query=미국+FSMA+204+식품추적', tBg: '#F3F4F6', tColor: '#555' }
                 ],
                 [
-                    { tag: '환경규제', label: '친환경 포장재 사용 의무화 가이드라인 개정에 따른 업계 대응 방안', link: 'https://www.foodsafetykorea.go.kr/', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '위생점검', label: '하절기 고위험군 미생물(살모넬라 등) 예방을 위한 특별 위생 점검 매뉴얼 배포', link: 'https://www.foodsafetykorea.go.kr/portal/fooddanger/suspension.do', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '글로벌', label: '일본 후생노동성, 지정 첨가물 성분 규격 및 사용 기준 개정안 발표', link: 'https://www.fda.gov/', tBg: '#F3F4F6', tColor: '#555' }
+                    { tag: '환경규제', label: '친환경 패키징 및 재생 페트(rPET) 식품 용기 사용 가이드라인 의무화', link: 'https://search.naver.com/search.naver?query=식품업계+친환경+포장+의무화', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '위생점검', label: '하절기 고위험군 미생물(살모넬라 등) 선별 예방을 위한 특별 위생 매뉴얼', link: 'https://search.naver.com/search.naver?query=하절기+식중독+위생점검+매뉴얼', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '글로벌', label: '동남아시아/일본 지정 첨가물 성분 규격 및 수출입 신고 기준 개정안', link: 'https://search.naver.com/search.naver?query=일본+식품첨가물+수출+규격', tBg: '#F3F4F6', tColor: '#555' }
                 ]
             ],
             'plan': [
                 [
-                    { tag: '원자재', label: '남미 기후 변화 여파로 인한 대두 단가 3분기 인상 전망 (선제 대응 필요)', link: 'https://kosis.kr/', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '환율/경제', label: '원-달러 환율 상승에 따른 수입 식자재 마진 방어 전략 리포트', link: 'https://kosis.kr/', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '공급망', label: '글로벌 해운 운임 지수 변동에 따른 4분기 물류 비용 상승 리스크 분석', link: 'https://www.kati.net/', tBg: '#F3F4F6', tColor: '#555' }
+                    { tag: '원자재', label: '남미 기후 변화 여파로 인한 팜유/대두 단가 3분기 인상 전망 선제 대응', link: 'https://search.naver.com/search.naver?query=대두유+팜유+가격+인상전망', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '환율/경제', label: '강달러 장기화(환율 리스크)에 따른 직수입 식자재 마진 방어/헤지 전략', link: 'https://search.naver.com/search.naver?query=강달러+수입+식자재+원가+부담', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '공급망', label: '해운 운임 지수(SCFI) 급등락 변동에 따른 4분기 글로벌 물류 비용 분석', link: 'https://search.naver.com/search.naver?query=해운운임지수+SCFI+물류비', tBg: '#F3F4F6', tColor: '#555' }
                 ],
                 [
-                    { tag: '원자재', label: '엘니뇨 현상 심화에 따른 국제 소맥/옥수수 선물 가격 2개월 연속 상승세', link: 'https://kosis.kr/', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '환율/경제', label: '외식물가지수 사상 최고치 경신에 따른 원가 절감 TFT 운영 현황', link: 'https://kosis.kr/', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '공급망', label: '동남아시아 주요 항만 물동량 적체에 따른 대체 해상/항공 운송 경로 확보 시급', link: 'https://www.kati.net/', tBg: '#F3F4F6', tColor: '#555' }
+                    { tag: '원자재', label: '엘니뇨 현상 심화 조짐에 따른 국제 소맥(밀가루) 선물 2개월 연속 상승세', link: 'https://search.naver.com/search.naver?query=국제+소맥+선물가격+밀가루', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '환율/경제', label: '외식물가지수 최고치 갱신에 따른 대형 프랜차이즈 원가 구조 절감 TFT', link: 'https://search.naver.com/search.naver?query=외식물가지수+원가절감', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '공급망', label: '중동 사태로 인한 유럽행 물동량 적체 심화 빛 대체 항공 운송 경로 확보', link: 'https://search.naver.com/search.naver?query=글로벌+물류대란+우회항로', tBg: '#F3F4F6', tColor: '#555' }
                 ]
             ],
             'sales': [
                 [
-                    { tag: '공공입찰', label: '2026년 하반기 수도권 공공기관 구내식당 대규모 위탁운영 사전 입찰 공고', link: 'https://www.g2b.go.kr/', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '외식납품', label: '대형 B2C 커피 프랜차이즈의 디저트/베이커리 B2B 납품 수요 급증 동향', link: 'https://www.atfis.or.kr/', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '시장분석', label: '기업 임직원 복지 향상으로 인한 \'프리미엄 조식 및 간편식 구독\' 시장 지속 확대', link: 'https://kosis.kr/', tBg: '#F3F4F6', tColor: '#555' }
+                    { tag: '공공입찰', label: '2026년 하반기 수도권 공공기관 및 군부대 구내식당 대규모 위탁운영 공고', link: 'https://search.naver.com/search.naver?query=공공기관+구내식당+위탁운영+입찰', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '외식납품', label: '대형 B2C 커피 프랜차이즈의 프리미엄 디저트/베이커리 B2B 납품 수요 급증', link: 'https://search.naver.com/search.naver?query=프랜차이즈+베이커리+디저트+B2B+납품', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '시장분석', label: '기업 임직원 조식 복지 확대로 인한 \'프리미엄 샐러드·샌드위치\' 구독 확대', link: 'https://search.naver.com/search.naver?query=오피스+조식+구독+샐러드+복지', tBg: '#F3F4F6', tColor: '#555' }
                 ],
                 [
-                    { tag: '공공입찰', label: '지역 거점 대형 병원 식자재 민간 위탁 선정 심사 평가 기준표 입수', link: 'https://www.g2b.go.kr/', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '외식납품', label: '초중고 무상급식 단가 인상에 기반한 프리미엄 식자재 카테고리 영업망 타진', link: 'https://www.atfis.or.kr/', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '시장분석', label: '도심권 오피스 상권 타겟 \'점심 배달 무인 구독형 샐러드 벤딩머신\' B2B 진출 증가', link: 'https://kosis.kr/', tBg: '#F3F4F6', tColor: '#555' }
+                    { tag: '공공입찰', label: '수도권 주요 대형 종합병원 환자/직원 복지용 메디푸드 위탁 급식 평가', link: 'https://search.naver.com/search.naver?query=대형병원+위탁급식+메디푸드', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '외식납품', label: '유치원·초중고 친환경 무상급식 단가 인상에 기반한 프리미엄 영업망 타진', link: 'https://search.naver.com/search.naver?query=친환경+학교급식+식자재+단가', tBg: '#F3F4F6', tColor: '#555' },
+                    { 무인상권: '트렌드', label: '공유 오피스 및 도심권 타겟 \'스마트 냉장고 무인 간편식 자판기\' 점유율 확보', link: 'https://search.naver.com/search.naver?query=오피스+스마트+간편식+냉장고', tBg: '#F3F4F6', tColor: '#555' }
                 ]
             ],
             'domestic': [
                 [
-                    { tag: 'CJ프레시웨이', label: 'B2B 식자재 유통 스마트 물류 센터 신규 거점 오픈 및 자동화 가속', link: 'https://search.naver.com/search.naver?query=CJ프레시웨이', tBg: '#DEE4EE', tColor: '#2B4E76' },
-                    { tag: '아워홈', label: '구내식당 전용 \'푸드테크 로봇/AI 비전스캐너\' 매장 도입 30% 확대', link: 'https://search.naver.com/search.naver?query=아워홈', tBg: '#DEE4EE', tColor: '#2B4E76' },
-                    { tag: '현대그린푸드', label: '케어푸드 특화 브랜드 \'그리팅\' 정기구독 B2C 및 B2B 매출 폭발적 성장', link: 'https://search.naver.com/search.naver?query=현대그린푸드', tBg: '#DEE4EE', tColor: '#2B4E76' }
+                    { tag: 'CJ프레시웨이', label: 'B2B 식자재 유통 스마트 물류 센터(Fulfillment) 신규 거점 오픈 및 자동화 가속', link: 'https://search.naver.com/search.naver?query=CJ프레시웨이+스마트물류센터', tBg: '#DEE4EE', tColor: '#2B4E76' },
+                    { tag: '아워홈', label: '구내식당 배식 동선 단축용 푸드테크 로봇/비전스캐너 무인 계산대 대거 확장', link: 'https://search.naver.com/search.naver?query=아워홈+푸드테크+비전스캐너', tBg: '#DEE4EE', tColor: '#2B4E76' },
+                    { tag: '현대그린푸드', label: '케어푸드 전문 브랜드 \'그리팅\' 정기구독 서비스 B2B 복지몰 매출 폭발적 성장', link: 'https://search.naver.com/search.naver?query=현대그린푸드+그리팅+기업복지', tBg: '#DEE4EE', tColor: '#2B4E76' }
                 ],
                 [
-                    { tag: 'CJ프레시웨이', label: '외식 솔루션 컨설팅 사업 강화를 통한 중소 프랜차이즈 거래처 락인(Lock-in) 전략', link: 'https://search.naver.com/search.naver?query=CJ프레시웨이', tBg: '#DEE4EE', tColor: '#2B4E76' },
-                    { tag: '아워홈', label: '프리미엄 실버타운 전용 연화식 식단 개발 및 케어푸드 B2B 납품 본격화 선언', link: 'https://search.naver.com/search.naver?query=아워홈', tBg: '#DEE4EE', tColor: '#2B4E76' },
-                    { tag: '현대그린푸드', label: '메디푸드(질환맞춤형 식단) 라트업 지분 인수 및 대형 의료기관 점유율 확대', link: 'https://search.naver.com/search.naver?query=현대그린푸드', tBg: '#DEE4EE', tColor: '#2B4E76' }
+                    { tag: 'CJ프레시웨이', label: '외식 솔루션 컨설팅(외식 비즈니스 파트너) 강화를 통한 프랜차이즈 락인 전략', link: 'https://search.naver.com/search.naver?query=CJ프레시웨이+외식솔루션+컨설팅', tBg: '#DEE4EE', tColor: '#2B4E76' },
+                    { tag: '아워홈', label: '프리미엄 시니어타운 전용 연화식 식단 개발 및 케어푸드 B2B 민간 납품 본격화', link: 'https://search.naver.com/search.naver?query=아워홈+시니어타운+케어푸드', tBg: '#DEE4EE', tColor: '#2B4E76' },
+                    { tag: '현대그린푸드', label: '질환맞춤형 식단(메디푸드) 스타트업 파트너십 및 수도권 대형 종합병원 점유율', link: 'https://search.naver.com/search.naver?query=현대그린푸드+메디푸드+병원급식', tBg: '#DEE4EE', tColor: '#2B4E76' }
                 ]
             ],
             'global': [
                 [
-                    { tag: 'Aramark(미국)', label: '주요 대학교/기업 식당 내 스마트 무인 결제(Vision AI) 시스템 전면 도입', link: 'https://www.aramark.com/', tBg: '#D1FAE5', tColor: '#065F46' },
-                    { tag: 'Sodexo(프랑스)', label: '지속가능경영 최우선 과제로 2026년까지 전체 식자재 친환경소재 전환 선언', link: 'https://www.sodexo.com/', tBg: '#D1FAE5', tColor: '#065F46' },
-                    { tag: 'Sysco(미국)', label: '글로벌 최대 식자재 유통사, 콜드체인 운송 최적화를 위한 빅데이터 AI 통합', link: 'https://www.sysco.com/', tBg: '#D1FAE5', tColor: '#065F46' }
+                    { tag: 'Aramark(미국)', label: '미국 스탠포드 등 대학교 캠퍼스 식당 내 스마트 무인 결제(Vision AI) 전면 도입', link: 'https://www.google.com/search?q=Aramark+AI+checkout+campus', tBg: '#D1FAE5', tColor: '#065F46' },
+                    { tag: 'Sodexo(프랑스)', label: '지속가능성 최우선 과제로 전 세계 사업장 플라스틱 제로 및 친환경 패키징 선언', link: 'https://www.google.com/search?q=Sodexo+sustainability+packaging', tBg: '#D1FAE5', tColor: '#065F46' },
+                    { tag: 'Sysco(미국)', label: '세계 최대 식자재 유통기업, 콜드체인 트럭 운송 최적화를 위한 물류 AI 스타트업 인수', link: 'https://www.google.com/search?q=Sysco+food+distribution+AI+acquisition', tBg: '#D1FAE5', tColor: '#065F46' }
                 ],
                 [
-                    { tag: 'Aramark(미국)', label: 'ESG 경영 차원에서 글로벌 구내식당 메뉴 내 식물성(Plant-based) 비중 44%로 확대', link: 'https://www.aramark.com/', tBg: '#D1FAE5', tColor: '#065F46' },
-                    { tag: 'Sodexo(프랑스)', label: '데이터 비전 AI 기반 급식 잔반 분석 시스템 \'WasteWatch\' 연동으로 환경 비용 50% 절감', link: 'https://www.sodexo.com/', tBg: '#D1FAE5', tColor: '#065F46' },
-                    { tag: 'Compass(영국)', label: '신흥 로봇 셰프 스타트업 파트너십 구축 및 병원 인프라 내 무인 조리 파일럿 매장 오픈', link: 'https://www.compass-group.com/', tBg: '#D1FAE5', tColor: '#065F46' }
+                    { tag: 'Aramark(미국)', label: '탄소 중립 및 ESG 트렌드에 힘입어 전 세계 급식 메뉴 내 Plant-based 비중 40% 의무화', link: 'https://www.google.com/search?q=Aramark+plant+based+menu+carbon', tBg: '#D1FAE5', tColor: '#065F46' },
+                    { tag: 'Sodexo(프랑스)', label: '지능형 잔반 분석 시스템 WasteWatch 글로벌 전구장 연동으로 연간 음식물 쓰레기 50% 절감', link: 'https://www.google.com/search?q=Sodexo+WasteWatch+food+waste', tBg: '#D1FAE5', tColor: '#065F46' },
+                    { tag: 'Compass Group', label: '무인 조리 로봇 셰프 상용화 로드맵 발표 및 병원·오피스 내 완전 무인 자판기 식당 파일럿 개시', link: 'https://www.google.com/search?q=Compass+Group+robot+chef+automated+kitchen', tBg: '#D1FAE5', tColor: '#065F46' }
                 ]
             ]
         };
 
-        // State tracker for index toggling
         const stateTracker = {
-            'rnd': 0, 'prod': 0, 'safety': 0, 'plan': 0, 'sales': 0, 'domestic': 0, 'global': 0
+            'ai': 0, 'rnd': 0, 'prod': 0, 'safety': 0, 'plan': 0, 'sales': 0, 'domestic': 0, 'global': 0
         };
 
         function renderList(targetId, dataArray) {
             const listEl = document.getElementById(targetId);
-            // Reset content and trigger reflow for animation
             listEl.innerHTML = '';
-            
             dataArray.forEach((item, index) => {
                 const li = document.createElement('li');
                 li.className = 'fade-in';
                 li.style.animationDelay = `${index * 0.05}s`;
-                
                 li.innerHTML = `<a href="${item.link}" target="_blank"><span class="tag" style="background:${item.tBg}; color:${item.tColor};">${item.tag}</span> ${item.label}</a>`;
                 listEl.appendChild(li);
             });
         }
 
+        function renderAIBriefing(dataObj) {
+            const listEl = document.getElementById('ai-briefing-list');
+            const analysisEl = document.getElementById('ai-analysis-text');
+            
+            listEl.innerHTML = '';
+            dataObj.list.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.className = 'fade-in';
+                li.style.animationDelay = `${index * 0.05}s`;
+                li.innerHTML = `<a href="${item.link}" target="_blank">${item.text}</a>`;
+                listEl.appendChild(li);
+            });
+
+            analysisEl.classList.remove('fade-in');
+            void analysisEl.offsetWidth; // trigger reflow
+            analysisEl.classList.add('fade-in');
+            analysisEl.innerHTML = dataObj.analysis;
+        }
+
         function refreshData(category, btnElement) {
-            // Animate spin button
             btnElement.classList.remove('spin');
-            void btnElement.offsetWidth; // Trigger reflow
+            void btnElement.offsetWidth;
             btnElement.classList.add('spin');
 
-            // Toggle array index
             let currentIndex = stateTracker[category];
             let nextIndex = currentIndex === 0 ? 1 : 0;
             stateTracker[category] = nextIndex;
 
-            // Render new data
             renderList(`list-${category}`, feedData[category][nextIndex]);
+        }
+
+        function refreshAIBriefing(btnElement) {
+            btnElement.classList.remove('spin');
+            void btnElement.offsetWidth;
+            btnElement.classList.add('spin');
+
+            let currentIndex = stateTracker['ai'];
+            let nextIndex = currentIndex === 0 ? 1 : 0;
+            stateTracker['ai'] = nextIndex;
+
+            renderAIBriefing(aiBriefingData[nextIndex]);
         }
 
         // Initialize lists on load
         window.onload = () => {
+            renderAIBriefing(aiBriefingData[0]);
             renderList('list-rnd', feedData['rnd'][0]);
             renderList('list-prod', feedData['prod'][0]);
             renderList('list-safety', feedData['safety'][0]);
