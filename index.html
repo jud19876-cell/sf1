@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>신세계푸드 Daily FoodIntel</title>
+    <!-- 폰트 적용 (Pretendard) -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <style>
+        :root {
+            --bg-color: #F5F7FA;
+            --card-bg: #FFFFFF;
+            --text-main: #111111;
+            --text-sub: #555555;
+            --text-muted: #888888;
+            --point-red: #E3000F;
+            --point-black: #000000;
+            --card-radius: 16px;
+            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+            --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 24px;
+            padding-top: 48px;
+            padding-bottom: 80px;
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: 36px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin: 0 0 10px 0;
+        }
+
+        .header p {
+            font-size: 16px;
+            color: var(--text-sub);
+            margin: 0;
+            font-weight: 500;
+        }
+
+        /* Shared Card Styles */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--card-radius);
+            padding: 24px 28px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            margin-bottom: 24px;
+        }
+
+        /* AI Briefing Card */
+        .ai-card {
+            border-left: 6px solid var(--point-red);
+            animation: fadeInUp 0.7s ease-out;
+        }
+
+        .ai-card h2 {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0 0 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .date {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .briefing-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 24px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .briefing-list li {
+            position: relative;
+        }
+
+        .briefing-list a {
+            font-size: 16px;
+            color: var(--text-main);
+            line-height: 1.5;
+            font-weight: 500;
+            padding-left: 18px;
+            text-decoration: none;
+            display: block;
+            transition: color 0.2s;
+        }
+
+        .briefing-list a:hover {
+            color: var(--point-red);
+            text-decoration: underline;
+        }
+
+        .briefing-list a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 6px;
+            height: 6px;
+            background-color: var(--point-red);
+            border-radius: 50%;
+            opacity: 0.9;
+        }
+
+        /* AI Analysis Strategy Box */
+        .ai-analysis {
+            background-color: #FFF6F6;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #FFE0E0;
+        }
+        
+        .ai-analysis h4 {
+            margin: 0 0 10px 0;
+            color: var(--point-red);
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ai-analysis p {
+            margin: 0;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 22px;
+            font-weight: 800;
+            margin-top: 48px;
+            margin-bottom: 24px;
+            color: var(--text-main);
+            animation: fadeIn 0.8s ease-out;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #E5E7EB;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+            animation: fadeInUp 0.9s ease-out;
+        }
+
+        /* Department Cards */
+        .dept-card {
+            background: var(--card-bg);
+            border-radius: var(--card-radius);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            border-top: 5px solid var(--point-black);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dept-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-4px);
+        }
+
+        .dept-card h3 {
+            font-size: 19px;
+            font-weight: 700;
+            margin: 0 0 16px 0;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Refresh Button Details */
+        .refresh-btn {
+            background: #F3F4F6;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: auto;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .refresh-btn:hover {
+            background: #E5E7EB;
+        }
+
+        .spin {
+            animation: spin-anim 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes spin-anim {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(180deg); }
+        }
+
+        .fade-in {
+            animation: textFade 0.4s ease forwards;
+        }
+
+        @keyframes textFade {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Sub List inside dept cards */
+        .dept-news-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-height: 120px; /* To prevent jumping during refresh */
+        }
+
+        .dept-news-list li {
+            position: relative;
+        }
+
+        .dept-news-list a {
+            text-decoration: none;
+            color: var(--text-sub);
+            font-size: 15px;
+            line-height: 1.5;
+            padding-left: 16px;
+            display: block;
+            transition: all 0.2s;
+        }
+
+        .dept-news-list a:hover {
+            color: var(--point-red);
+        }
+
+        .dept-news-list a::before {
+            content: '-';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #AAA;
+            font-weight: 700;
+        }
+
+        .tag {
+            font-size: 12px;
+            font-weight: 700;
+            background: #F3F4F6;
+            color: #555;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-right: 6px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+            .container { padding: 16px; }
+            .dept-card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1><span style="color: #E3000F;">SHINSEGAE</span> FOOD</h1>
+            <p><strong>Daily FoodIntel</strong> - 당신의 업무를 위한 맞춤형 인사이트</p>
+        </header>
+
+        <!-- AI Briefing -->
+        <section class="card ai-card">
+            <h2>🤖 오늘의 AI 브리핑</h2>
+            <span class="date" id="current-date"></span>
+            
+            <ul class="briefing-list">
+                <li><a href="https://www.atfis.or.kr/" target="_blank">[글로벌] 홀푸드마켓 선정 2026 트렌드: '여성 농업인의 해' 및 지속가능성(ESG) 가치소비 부상 ↗️</a></li>
+                <li><a href="https://kosis.kr/" target="_blank">[마켓] 2024년 온라인 식품 거래액 전년 대비 13.7% 증가하며 다시 성장세 전환 ↗️</a></li>
+                <li><a href="https://www.foodsafetykorea.go.kr/" target="_blank">[푸드테크] 식품 제조 공정 최적화 및 품질 관리에 머신러닝/컴퓨터 비전 도입 활발 ↗️</a></li>
+            </ul>
+
+            <div class="ai-analysis">
+                <h4>💡 AI 업황 분석 및 전략 제안</h4>
+                <p>최근 <strong>'케어푸드(맞춤형 건강식)'</strong>와 <strong>'온라인 B2B 식자재 유통'</strong>이 핵심 성장 동력으로 부상하고 있습니다. 신세계푸드는 기존 외식 인프라를 활용하여 실버 세대 타겟의 프리미엄 영양식 라인업 편의성을 강화하고, B2B 납품 단가 최적화를 위해 스마트팩토리 내 예지 보전 AI 도입 검토를 앞당겨야 할 시점입니다.</p>
+            </div>
+        </section>
+
+        <h2 class="section-title">🏢 부서별 실시간 데이터 피드</h2>
+
+        <!-- Grid Layout -->
+        <div class="grid">
+            <!-- R&D / 마케팅 -->
+            <div class="dept-card">
+                <h3>🎯 R&D / 마케팅 <button class="refresh-btn" onclick="refreshData('rnd', this)" title="새로운 정보 불러오기">🔄</button></h3>
+                <ul class="dept-news-list" id="list-rnd">
+                    <!-- Javascript Data rendered here -->
+                </ul>
+            </div>
+            
+            <!-- 생산 / 설비 -->
+            <div class="dept-card">
+                <h3>🏭 생산 / 설비 <button class="refresh-btn" onclick="refreshData('prod', this)" title="새로운 정보 불러오기">🔄</button></h3>
+                <ul class="dept-news-list" id="list-prod">
+                    <!-- Javascript Data rendered here -->
+                </ul>
+            </div>
+
+            <!-- 안전 / 품질 -->
+            <div class="dept-card">
+                <h3>🛡️ 안전 / 품질 <button class="refresh-btn" onclick="refreshData('safety', this)" title="새로운 정보 불러오기">🔄</button></h3>
+                <ul class="dept-news-list" id="list-safety">
+                    <!-- Javascript Data rendered here -->
+                </ul>
+            </div>
+
+            <!-- 기획 / 구매 -->
+            <div class="dept-card">
+                <h3>📊 기획 / 구매 <button class="refresh-btn" onclick="refreshData('plan', this)" title="새로운 정보 불러오기">🔄</button></h3>
+                <ul class="dept-news-list" id="list-plan">
+                    <!-- Javascript Data rendered here -->
+                </ul>
+            </div>
+
+            <!-- B2B / 영업 -->
+            <div class="dept-card">
+                <h3>💼 B2B / 영업 <button class="refresh-btn" onclick="refreshData('sales', this)" title="새로운 정보 불러오기">🔄</button></h3>
+                <ul class="dept-news-list" id="list-sales">
+                    <!-- Javascript Data rendered here -->
+                </ul>
+            </div>
+        </div>
+
+        <!-- Competitors & Global Section -->
+        <h2 class="section-title" style="margin-top: 64px;">🌐 경쟁사 및 글로벌 선도 기업 동향</h2>
+        
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));">
+            <!-- 국내 경쟁사 -->
+            <div class="dept-card" style="border-top: 5px solid #2B4E76; background-color: #F8FAFC;">
+                <h3>🇰🇷 국내 주요 경쟁사 동향 <button class="refresh-btn" onclick="refreshData('domestic', this)" title="새로운 정보 불러오기">🔄</button></h3>
+                <ul class="dept-news-list" id="list-domestic">
+                    <!-- Javascript Data rendered here -->
+                </ul>
+            </div>
+
+            <!-- 해외 기업 -->
+            <div class="dept-card" style="border-top: 5px solid #10B981; background-color: #F0FDF4;">
+                <h3>🌎 해외 선도 기업 인사이트 <button class="refresh-btn" onclick="refreshData('global', this)" title="새로운 정보 불러오기">🔄</button></h3>
+                <ul class="dept-news-list" id="list-global">
+                    <!-- Javascript Data rendered here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set dynamic date
+        const today = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+        document.getElementById('current-date').innerText = today.toLocaleDateString('ko-KR', options) + ' 브리핑';
+
+        // Mock Data Dictionary
+        const feedData = {
+            'rnd': [
+                [
+                    { tag: '트렌드', label: '실버 세대 겨냥한 \'연화식/케어푸드\' 시장 규모 2조 5천억 돌파 전망', link: 'https://www.atfis.or.kr/', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '신제품', label: '글로벌 식품기업들, 지속가능한 \'해조류 기반\' 기능성 식품에 대규모 투자', link: 'https://www.kati.net/', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '소비동향', label: '1인가구 증가로 인한 \'소용량 프리미엄 밀키트\' 매출 전년비 45% 상승', link: 'https://kosis.kr/', tBg: '#F3F4F6', tColor: '#555' }
+                ],
+                [
+                    { tag: '제과트렌드', label: '비건 인증(Vegan) 베이커리 시장 매년 20% 이상 고성장 기조', link: 'https://www.atfis.or.kr/', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '신소재', label: '대체당(스테비아/알룰로스) 활용 제로 칼로리 소스 라인업 강화', link: 'https://www.kati.net/', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '소비동향', label: '헬시플레저(Healthy Pleasure) 열풍에 맞춘 단백질 강화 식단 강세', link: 'https://kosis.kr/', tBg: '#F3F4F6', tColor: '#555' }
+                ]
+            ],
+            'prod': [
+                [
+                    { tag: '스마트팩토리', label: '식품 공정 내 비전 AI 검수 시스템 도입으로 불량률 99% 감소', link: 'https://www.smart-factory.kr/', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '로보틱스', label: '식재료 전처리 자동화 로봇 전면 도입 시 납품 단가 절감 20% 리포트', link: 'https://www.kati.net/', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '유지보수', label: 'IoT 센서 기반 주요 가공설비 \'예지 보전\' 선제적 도입 업계 동향', link: 'https://www.atfis.or.kr/', tBg: '#F3F4F6', tColor: '#555' }
+                ],
+                [
+                    { tag: '스마트팩토리', label: '데이터 기반 에너지 최적화 시스템 적용, 공장 탄소 배출 15% 감축', link: 'https://www.smart-factory.kr/', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '포장자동화', label: 'HMR 패키징 공정 무인화 로봇 투입을 통한 일일 포장 생산성 3배 증대', link: 'https://www.kati.net/', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '유지보수', label: '음향 데이터(Acoustic Data) 딥러닝 기반 모터 결함 예측 모델 국산화 적용', link: 'https://www.atfis.or.kr/', tBg: '#F3F4F6', tColor: '#555' }
+                ]
+            ],
+            'safety': [
+                [
+                    { tag: '규제동향', label: '식약처, 식품 이력추적 의무적용 대상 품목 대폭 확대 고시', link: 'https://www.foodsafetykorea.go.kr/', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '이슈경보', label: '최근 수입 향신료 내 잔류농약 초과 검출에 따른 선제적 전수조사 실시 알림', link: 'https://www.foodsafetykorea.go.kr/portal/fooddanger/suspension.do', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '글로벌', label: '미국 FSMA 204(식이안전법) 정보 기록 의무 강화에 대비한 블록체인 대응 가이드', link: 'https://www.fda.gov/', tBg: '#F3F4F6', tColor: '#555' }
+                ],
+                [
+                    { tag: '환경규제', label: '친환경 포장재 사용 의무화 가이드라인 개정에 따른 업계 대응 방안', link: 'https://www.foodsafetykorea.go.kr/', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '위생점검', label: '하절기 고위험군 미생물(살모넬라 등) 예방을 위한 특별 위생 점검 매뉴얼 배포', link: 'https://www.foodsafetykorea.go.kr/portal/fooddanger/suspension.do', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '글로벌', label: '일본 후생노동성, 지정 첨가물 성분 규격 및 사용 기준 개정안 발표', link: 'https://www.fda.gov/', tBg: '#F3F4F6', tColor: '#555' }
+                ]
+            ],
+            'plan': [
+                [
+                    { tag: '원자재', label: '남미 기후 변화 여파로 인한 대두 단가 3분기 인상 전망 (선제 대응 필요)', link: 'https://kosis.kr/', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '환율/경제', label: '원-달러 환율 상승에 따른 수입 식자재 마진 방어 전략 리포트', link: 'https://kosis.kr/', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '공급망', label: '글로벌 해운 운임 지수 변동에 따른 4분기 물류 비용 상승 리스크 분석', link: 'https://www.kati.net/', tBg: '#F3F4F6', tColor: '#555' }
+                ],
+                [
+                    { tag: '원자재', label: '엘니뇨 현상 심화에 따른 국제 소맥/옥수수 선물 가격 2개월 연속 상승세', link: 'https://kosis.kr/', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '환율/경제', label: '외식물가지수 사상 최고치 경신에 따른 원가 절감 TFT 운영 현황', link: 'https://kosis.kr/', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '공급망', label: '동남아시아 주요 항만 물동량 적체에 따른 대체 해상/항공 운송 경로 확보 시급', link: 'https://www.kati.net/', tBg: '#F3F4F6', tColor: '#555' }
+                ]
+            ],
+            'sales': [
+                [
+                    { tag: '공공입찰', label: '2026년 하반기 수도권 공공기관 구내식당 대규모 위탁운영 사전 입찰 공고', link: 'https://www.g2b.go.kr/', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '외식납품', label: '대형 B2C 커피 프랜차이즈의 디저트/베이커리 B2B 납품 수요 급증 동향', link: 'https://www.atfis.or.kr/', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '시장분석', label: '기업 임직원 복지 향상으로 인한 \'프리미엄 조식 및 간편식 구독\' 시장 지속 확대', link: 'https://kosis.kr/', tBg: '#F3F4F6', tColor: '#555' }
+                ],
+                [
+                    { tag: '공공입찰', label: '지역 거점 대형 병원 식자재 민간 위탁 선정 심사 평가 기준표 입수', link: 'https://www.g2b.go.kr/', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '외식납품', label: '초중고 무상급식 단가 인상에 기반한 프리미엄 식자재 카테고리 영업망 타진', link: 'https://www.atfis.or.kr/', tBg: '#F3F4F6', tColor: '#555' },
+                    { tag: '시장분석', label: '도심권 오피스 상권 타겟 \'점심 배달 무인 구독형 샐러드 벤딩머신\' B2B 진출 증가', link: 'https://kosis.kr/', tBg: '#F3F4F6', tColor: '#555' }
+                ]
+            ],
+            'domestic': [
+                [
+                    { tag: 'CJ프레시웨이', label: 'B2B 식자재 유통 스마트 물류 센터 신규 거점 오픈 및 자동화 가속', link: 'https://search.naver.com/search.naver?query=CJ프레시웨이', tBg: '#DEE4EE', tColor: '#2B4E76' },
+                    { tag: '아워홈', label: '구내식당 전용 \'푸드테크 로봇/AI 비전스캐너\' 매장 도입 30% 확대', link: 'https://search.naver.com/search.naver?query=아워홈', tBg: '#DEE4EE', tColor: '#2B4E76' },
+                    { tag: '현대그린푸드', label: '케어푸드 특화 브랜드 \'그리팅\' 정기구독 B2C 및 B2B 매출 폭발적 성장', link: 'https://search.naver.com/search.naver?query=현대그린푸드', tBg: '#DEE4EE', tColor: '#2B4E76' }
+                ],
+                [
+                    { tag: 'CJ프레시웨이', label: '외식 솔루션 컨설팅 사업 강화를 통한 중소 프랜차이즈 거래처 락인(Lock-in) 전략', link: 'https://search.naver.com/search.naver?query=CJ프레시웨이', tBg: '#DEE4EE', tColor: '#2B4E76' },
+                    { tag: '아워홈', label: '프리미엄 실버타운 전용 연화식 식단 개발 및 케어푸드 B2B 납품 본격화 선언', link: 'https://search.naver.com/search.naver?query=아워홈', tBg: '#DEE4EE', tColor: '#2B4E76' },
+                    { tag: '현대그린푸드', label: '메디푸드(질환맞춤형 식단) 라트업 지분 인수 및 대형 의료기관 점유율 확대', link: 'https://search.naver.com/search.naver?query=현대그린푸드', tBg: '#DEE4EE', tColor: '#2B4E76' }
+                ]
+            ],
+            'global': [
+                [
+                    { tag: 'Aramark(미국)', label: '주요 대학교/기업 식당 내 스마트 무인 결제(Vision AI) 시스템 전면 도입', link: 'https://www.aramark.com/', tBg: '#D1FAE5', tColor: '#065F46' },
+                    { tag: 'Sodexo(프랑스)', label: '지속가능경영 최우선 과제로 2026년까지 전체 식자재 친환경소재 전환 선언', link: 'https://www.sodexo.com/', tBg: '#D1FAE5', tColor: '#065F46' },
+                    { tag: 'Sysco(미국)', label: '글로벌 최대 식자재 유통사, 콜드체인 운송 최적화를 위한 빅데이터 AI 통합', link: 'https://www.sysco.com/', tBg: '#D1FAE5', tColor: '#065F46' }
+                ],
+                [
+                    { tag: 'Aramark(미국)', label: 'ESG 경영 차원에서 글로벌 구내식당 메뉴 내 식물성(Plant-based) 비중 44%로 확대', link: 'https://www.aramark.com/', tBg: '#D1FAE5', tColor: '#065F46' },
+                    { tag: 'Sodexo(프랑스)', label: '데이터 비전 AI 기반 급식 잔반 분석 시스템 \'WasteWatch\' 연동으로 환경 비용 50% 절감', link: 'https://www.sodexo.com/', tBg: '#D1FAE5', tColor: '#065F46' },
+                    { tag: 'Compass(영국)', label: '신흥 로봇 셰프 스타트업 파트너십 구축 및 병원 인프라 내 무인 조리 파일럿 매장 오픈', link: 'https://www.compass-group.com/', tBg: '#D1FAE5', tColor: '#065F46' }
+                ]
+            ]
+        };
+
+        // State tracker for index toggling
+        const stateTracker = {
+            'rnd': 0, 'prod': 0, 'safety': 0, 'plan': 0, 'sales': 0, 'domestic': 0, 'global': 0
+        };
+
+        function renderList(targetId, dataArray) {
+            const listEl = document.getElementById(targetId);
+            // Reset content and trigger reflow for animation
+            listEl.innerHTML = '';
+            
+            dataArray.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.className = 'fade-in';
+                li.style.animationDelay = `${index * 0.05}s`;
+                
+                li.innerHTML = `<a href="${item.link}" target="_blank"><span class="tag" style="background:${item.tBg}; color:${item.tColor};">${item.tag}</span> ${item.label}</a>`;
+                listEl.appendChild(li);
+            });
+        }
+
+        function refreshData(category, btnElement) {
+            // Animate spin button
+            btnElement.classList.remove('spin');
+            void btnElement.offsetWidth; // Trigger reflow
+            btnElement.classList.add('spin');
+
+            // Toggle array index
+            let currentIndex = stateTracker[category];
+            let nextIndex = currentIndex === 0 ? 1 : 0;
+            stateTracker[category] = nextIndex;
+
+            // Render new data
+            renderList(`list-${category}`, feedData[category][nextIndex]);
+        }
+
+        // Initialize lists on load
+        window.onload = () => {
+            renderList('list-rnd', feedData['rnd'][0]);
+            renderList('list-prod', feedData['prod'][0]);
+            renderList('list-safety', feedData['safety'][0]);
+            renderList('list-plan', feedData['plan'][0]);
+            renderList('list-sales', feedData['sales'][0]);
+            renderList('list-domestic', feedData['domestic'][0]);
+            renderList('list-global', feedData['global'][0]);
+        };
+
+    </script>
+</body>
+</html>
