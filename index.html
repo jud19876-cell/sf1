@@ -2,576 +2,858 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>신세계푸드 Daily FoodIntel</title>
-    <!-- 폰트 적용 (Pretendard) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 리뷰룸 5.0 - Dynamic AI Multi-Agent & PPT</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <style>
-        :root {
-            --bg-color: #F5F7FA;
-            --card-bg: #FFFFFF;
-            --text-main: #111111;
-            --text-sub: #555555;
-            --text-muted: #888888;
-            --point-red: #E3000F;
-            --point-black: #000000;
-            --card-radius: 16px;
-            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
-            --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            -webkit-font-smoothing: antialiased;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 24px;
-            padding-top: 48px;
-            padding-bottom: 80px;
-        }
-
-        /* Header */
-        .header {
-            margin-bottom: 36px;
-            animation: fadeInDown 0.6s ease-out;
-        }
-
-        .header h1 {
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            margin: 0 0 10px 0;
-        }
-
-        .header p {
-            font-size: 16px;
-            color: var(--text-sub);
-            margin: 0;
-            font-weight: 500;
-        }
-
-        /* Shared Card Styles */
-        .card {
-            background: var(--card-bg);
-            border-radius: var(--card-radius);
-            padding: 24px 28px;
-            box-shadow: var(--shadow-md);
-            position: relative;
-            overflow: hidden;
-            transition: var(--transition);
-            margin-bottom: 24px;
-        }
-
-        /* AI Briefing Card */
-        .ai-card {
-            border-left: 6px solid var(--point-red);
-            animation: fadeInUp 0.7s ease-out;
-        }
-
-        .ai-card h2 {
-            font-size: 24px;
-            font-weight: 800;
-            margin: 0 0 4px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .date {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-            display: block;
-        }
-
-        .briefing-list {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 24px 0;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .briefing-list li {
-            position: relative;
-        }
-
-        .briefing-list a {
-            font-size: 16px;
-            color: var(--text-main);
-            line-height: 1.5;
-            font-weight: 500;
-            padding-left: 18px;
-            text-decoration: none;
-            display: block;
-            transition: color 0.2s;
-        }
-
-        .briefing-list a:hover {
-            color: var(--point-red);
-            text-decoration: underline;
-        }
-
-        .briefing-list a::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 10px;
-            width: 6px;
-            height: 6px;
-            background-color: var(--point-red);
-            border-radius: 50%;
-            opacity: 0.9;
-        }
-
-        /* AI Analysis Strategy Box */
-        .ai-analysis {
-            background-color: #FFF6F6;
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid #FFE0E0;
-        }
+        :root { --bg-color: #F8F9FA; --card-bg: #FFFFFF; --text-main: #111111; --text-sub: #555555; --point-red: #E3000F; --border-light: #EAEAEA; }
+        body { font-family: 'Pretendard', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; color: var(--text-main); }
+        .header { background-color: #fff; padding: 20px 24px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05);}
+        .header h1 { margin: 0; font-size: 22px; font-weight: 900; letter-spacing: -0.5px;}
+        .tabs { display: flex; gap: 10px; background: #fff; padding: 16px 24px; border-bottom: 1px solid var(--border-light); overflow-x: auto; }
+        .tab-btn { flex: 1; padding: 18px; border: none; background: #F8F9FA; border-radius: 8px; font-weight: 800; cursor: pointer; color: #555; font-size: 16px; transition: all 0.2s; border: 1px solid #ddd; }
+        .tab-btn.active { background: #111; color: #fff; border-color: #111; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         
-        .ai-analysis h4 {
-            margin: 0 0 10px 0;
-            color: var(--point-red);
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .content { max-width: 1000px; margin: 0 auto; padding: 24px; padding-bottom: 200px; }
+        .main-section { display: none; animation: fadeIn 0.4s; }
+        .main-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .ai-analysis p {
-            margin: 0;
-            font-size: 15px;
-            line-height: 1.6;
-            color: #333;
-            font-weight: 500;
-        }
+        /* DB Hub Styles */
+        .db-layout { display: flex; gap: 24px; align-items: flex-start; }
+        .db-sidebar { width: 240px; background: #fff; border: 1px solid var(--border-light); border-radius: 12px; padding: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .d-btn { display: block; width: 100%; text-align: left; padding: 14px 16px; margin-bottom: 6px; border: none; background: transparent; border-radius: 8px; font-weight: 800; cursor: pointer; color: #666; font-size: 15px; transition: 0.2s; }
+        .d-btn:hover { background: #F5F5F5; color:#111; }
+        .d-btn.active { background: #FFF4F4; color: #E3000F; }
+        
+        .db-content { flex: 1; background: #fff; border: 1px solid var(--border-light); border-radius: 12px; padding: 32px; min-height: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); transition: 0.3s; }
+        .db-section { display: none; animation: fadeIn 0.3s; }
+        .db-section.active { display: block; }
+        .db-title { margin-top: 0; font-size: 20px; font-weight: 800; border-bottom: 2px solid #111; padding-bottom: 16px; margin-bottom: 24px; }
+        
+        .input-group { margin-bottom: 20px; }
+        .input-label { font-size: 14px; font-weight: 800; margin-bottom: 8px; display: block; color: #333; }
+        .input-box { width: 100%; background: #FAFAFA; border: 1px solid #ddd; border-radius: 8px; padding: 14px; font-family: inherit; font-size: 14px; box-sizing: border-box; color: #111; line-height:1.6; transition: background 0.5s; font-weight:700;}
+        .focus-flash { animation: flashInput 1s ease-out; }
+        @keyframes flashInput { 0% { background: #E8F0FE; border-color: #1967D2; } 100% { background: #FAFAFA; border-color: #ddd; } }
 
-        /* Section Title */
-        .section-title {
-            font-size: 22px;
-            font-weight: 800;
-            margin-top: 48px;
-            margin-bottom: 24px;
-            color: var(--text-main);
-            animation: fadeIn 0.8s ease-out;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #E5E7EB;
-        }
+        /* Sim Box */
+        .card { background: var(--card-bg); padding: 32px; border-radius: 16px; margin-bottom: 32px; border: 2px solid #111; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .start-btn { background: #1967D2; color: #fff; width: 100%; border: none; padding: 20px; border-radius: 12px; font-size: 20px; font-weight: 900; cursor: pointer; transition: 0.2s; margin-top: 16px; letter-spacing: -0.5px;}
+        .start-btn:hover { background: #114c9e; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(25, 103, 210, 0.3); }
 
-        /* Grid Layout */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 24px;
-            animation: fadeInUp 0.9s ease-out;
-        }
+        /* Loading */
+        .loading-box { background: #fff; border: 1px solid var(--border-light); border-left: 6px solid #1967D2; padding: 24px; border-radius: 12px; margin-bottom: 24px; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+        .load-line { font-size: 15px; color: #333; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; opacity: 0; }
+        .load-line.visible { animation: slideRight 0.5s forwards; }
 
-        /* Department Cards */
-        .dept-card {
-            background: var(--card-bg);
-            border-radius: var(--card-radius);
-            padding: 24px;
-            box-shadow: var(--shadow-sm);
-            border-top: 5px solid var(--point-black);
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-        }
+        /* Accordion Custom Styling */
+        .team-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.05); border-left: 6px solid #ccc; margin-bottom: 24px; animation: slideUp 0.6s forwards; overflow: hidden; border: 1px solid #EAEAEA; border-left-width: 6px; }
+        .team-seq { border-left-color: #64748B; } .team-1 { border-left-color: #3B82F6; } .team-2 { border-left-color: #10B981; } .team-3 { border-left-color: #F59E0B; }
+        .team-4 { border-left-color: #8B5CF6; } .team-5 { border-left-color: #EF4444; } .team-6 { border-left-color: #EC4899; } .team-finance { border-left-color: #111111; }
+        .team-media { border-left-color: #EC4899; } .team-schedule { border-left-color: #06B6D4; }
+        
+        .accordion-head { padding: 20px 24px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 18px; font-weight: 800; color: #111; background: #fff; transition: background 0.2s; }
+        .accordion-head:hover { background: #F8F9FA; }
+        .accordion-icon { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #EAEAEA; font-size: 18px; color: #333; font-weight: 800; transition: transform 0.3s; }
+        .accordion-head.open .accordion-icon { transform: rotate(45deg); background: #333; color: #fff; }
+        .accordion-body { padding: 0 24px 24px 24px; display: none; line-height: 1.6; font-size: 15px; color: #333; border-top: 1px solid #eee; padding-top:20px; }
 
-        .dept-card:hover {
-            box-shadow: var(--shadow-hover);
-            transform: translateY(-4px);
-        }
+        .table-custom { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; background:#fff;}
+        .table-custom th { background: #F8F9FA; padding: 14px; text-align: center; border-bottom: 2px solid #ddd; color: #111; font-weight: 900; }
+        .table-custom td { padding: 14px; border-bottom: 1px solid #eee; color: #444; vertical-align: middle; }
+        .table-custom tr:hover td { background: #FAFAFA; }
 
-        .dept-card h3 {
-            font-size: 19px;
-            font-weight: 700;
-            margin: 0 0 16px 0;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        /* Process Flow CSS */
+        .process-container { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; background: #FAFAFA; padding: 20px; border: 2px solid #EAEAEA; border-radius: 12px; margin-top:20px; }
+        .p-step { background: #fff; border: 2px solid #111; border-radius: 8px; padding: 14px 10px; width: 120px; text-align: center; position: relative; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .p-step.ccp { background: #FEF2F2; border-color: #DC2626; }
+        .p-step h4 { margin: 0 0 10px 0; font-size: 14px; color: #111; font-weight: 800; word-break: keep-all; line-height:1.4;}
+        .equip-tag { display: inline-block; background: #1967D2; color: #fff; font-size: 11px; padding: 4px 6px; border-radius: 4px; font-weight: 800; line-height: 1.3;}
+        .p-step.ccp .equip-tag { background: #DC2626; }
+        .p-arrow { color: #888; font-size: 20px; font-weight: 900; }
 
-        /* Refresh Button Details */
-        .refresh-btn {
-            background: #F3F4F6;
-            border: none;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            margin-left: auto;
-            transition: var(--transition);
-            font-size: 14px;
-        }
+        /* Factory Plan CSS */
+        .haccp-factory-board { background: #fff; border: 3px solid #222; border-radius: 12px; padding: 24px; margin-top: 16px; margin-bottom: 30px; box-shadow: inset 0 0 20px rgba(0,0,0,0.02);}
+        .factory-legend { display: flex; gap: 16px; margin-bottom: 20px; justify-content: flex-end; font-size: 13px; font-weight: 700; }
+        .legend-item .box { display: inline-block; width: 16px; height: 16px; margin-right: 6px; vertical-align: middle; border: 1px solid #ccc; }
+        .box.dirty { background: #F3F4F6; } .box.buffer { background: #FEF3C7; border-color: #F59E0B;} .box.clean { background: #E6F4EA; border-color: #10B981;}
+        .factory-floor { display: flex; gap: 16px; background: #EEF2F6; padding: 20px; border-radius: 8px; border: 2px dashed #9E9E9E; position: relative; }
+        .factory-col { flex: 1; display: flex; flex-direction: column; gap: 12px; position: relative; }
+        .room { border: 2px solid #AAA; border-radius: 4px; padding: 16px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); display: flex; flex-direction: column; }
+        .room-title { font-weight: 800; font-size: 15px; margin-bottom: 12px; color: #111; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 8px;}
+        .equip { font-size: 13px; color: #444; background: rgba(255,255,255,0.8); padding: 8px; border-radius: 4px; margin-bottom: auto; border: 1px dotted #ccc; line-height: 1.4;}
+        .manpower { display: inline-flex; align-self: flex-start; background: #E0E7FF; color: #3730A3; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 800; margin-top:12px; align-items:center;}
+        .dirty-room { background: #F3F4F6; border-color: #9CA3AF; } .buffer-room { background: #FEF3C7; border-color: #D97706; justify-content: center; align-items: center; font-weight:800; color:#B45309; min-height:60px; padding:8px;} .clean-room { background: #E6F4EA; border-color: #16A34A; } .ccp-room { background: #FEF2F2; border-color: #DC2626; }
+        .flow-arrow-right { position: absolute; right: -20px; top: 50%; transform: translateY(-50%); font-size: 24px; color: #333; font-weight:900; z-index: 10; }
 
-        .refresh-btn:hover {
-            background: #E5E7EB;
-        }
+        /* Milestone Tracker CSS */
+        .milestone-track { display: flex; justify-content: space-between; position: relative; margin-top: 30px; margin-bottom: 20px; padding: 0 20px; }
+        .milestone-track::before { content:''; position: absolute; top:12px; left:20px; right:20px; height:4px; background:#ddd; z-index:1; }
+        .m-point { display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; width: 25%; }
+        .m-dot { width: 28px; height: 28px; border-radius: 50%; background: #fff; border: 4px solid #1967D2; margin-bottom: 12px; }
+        .m-point.done .m-dot { background: #1967D2; } .m-point.final .m-dot { background: #E3000F; border-color: #E3000F; }
+        .m-title { font-weight: 800; font-size: 14px; color: #111; margin-bottom: 4px; text-align: center; }
+        .m-date { font-size: 13px; color: #777; font-weight: 700; background:#F5F5F5; padding:2px 8px; border-radius:4px;}
 
-        .spin {
-            animation: spin-anim 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        /* Video / Animation css */
+        .promo-container { position: relative; width: 100%; height: 420px; background: #000; border-radius: 12px; overflow: hidden; margin-top: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 4px solid #222; }
+        .video-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transform: scale(1.15); filter: brightness(0.6); }
+        .promo-text { position: absolute; width: 100%; text-align: center; color: #fff; font-weight: 900; font-size: 40px; text-shadow: 0 4px 16px rgba(0,0,0,0.9); top: 50%; transform: translateY(-50%); opacity: 0; z-index: 10;}
+        .promo-sub { margin-top:16px; font-size:24px; font-weight:700; color:#EAB308;}
+        .promo-bar { position: absolute; bottom: 0; left: 0; height: 8px; background: #E3000F; width: 0%; z-index: 20; }
+        .promo-badge { position: absolute; top: 20px; left: 20px; background: #E3000F; color: #fff; padding: 6px 14px; font-weight: 800; font-size: 13px; border-radius: 4px; z-index: 20; box-shadow: 0 4px 10px rgba(227,0,15,0.4);}
+        .play-layer-1 { animation: videoFade 15s infinite 0s; } .play-layer-2 { animation: videoFade 15s infinite 5s; } .play-layer-3 { animation: videoFade 15s infinite 10s; }
+        .play-text-1 { animation: textShow 15s infinite 0.5s; } .play-text-2 { animation: textShow 15s infinite 5.5s; } .play-text-3 { animation: textShow 15s infinite 10.5s; }
+        .play-progress { animation: playBar 15s infinite linear; }
+        @keyframes videoFade { 0% { opacity: 0; transform: scale(1.15); } 10% { opacity: 1; transform: scale(1.1); } 30% { opacity: 1; transform: scale(1.0); } 35% { opacity: 0; } 100% { opacity: 0; } }
+        @keyframes textShow { 0% { opacity: 0; transform: translateY(-30%); } 10% { opacity: 1; transform: translateY(-50%); } 25% { opacity: 1; transform: translateY(-50%); } 30% { opacity: 0; transform: translateY(-70%); } 100% { opacity: 0; } }
+        @keyframes playBar { 0% { width: 0%; } 100% { width: 100%; } }
 
-        @keyframes spin-anim {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(180deg); }
-        }
+        /* PPT TAB CSS */
+        .ppt-wrapper { background: #333; padding: 40px; border-radius: 16px; margin-top: 20px;}
+        .ppt-slide { aspect-ratio: 16/9; background: #fff; border-radius: 8px; margin-bottom: 40px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); position: relative; overflow: hidden; display: flex; flex-direction: column; }
+        .ppt-slide::before { content:''; position: absolute; top:0; left:0; width:10px; height:100%; background: #E3000F; }
+        .ppt-title { font-size: 32px; font-weight: 900; color: #111; margin-top: 0; margin-bottom: 12px; border-bottom: 2px solid #111; padding-bottom: 20px;}
+        .ppt-subtitle { font-size: 18px; font-weight: 700; color: #666; margin-bottom: 30px;}
+        .ppt-content { font-size: 18px; line-height: 1.8; color: #333; flex: 1;}
+        .ppt-empty-state { text-align: center; color: #aaa; margin-top: 100px; font-size: 24px; font-weight: 800; }
+        .ppt-footer { margin-top:auto; border-top: 1px solid #ccc; padding-top: 20px; display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; color: #777; }
 
-        .fade-in {
-            animation: textFade 0.4s ease forwards;
-        }
-
-        @keyframes textFade {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Sub List inside dept cards */
-        .dept-news-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            min-height: 120px; /* To prevent jumping during refresh */
-        }
-
-        .dept-news-list li {
-            position: relative;
-        }
-
-        .dept-news-list a {
-            text-decoration: none;
-            color: var(--text-sub);
-            font-size: 15px;
-            line-height: 1.5;
-            padding-left: 16px;
-            display: block;
-            transition: all 0.2s;
-        }
-
-        .dept-news-list a:hover {
-            color: var(--point-red);
-        }
-
-        .dept-news-list a::before {
-            content: '-';
-            position: absolute;
-            left: 0;
-            top: 0;
-            color: #AAA;
-            font-weight: 700;
-        }
-
-        .tag {
-            font-size: 12px;
-            font-weight: 700;
-            background: #F3F4F6;
-            color: #555;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-right: 6px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .grid { grid-template-columns: 1fr; }
-            .container { padding: 16px; }
-            .dept-card { padding: 20px; }
-        }
     </style>
 </head>
 <body>
+    <div class="header"><h1>[AI 리뷰룸 5.0] 전사적 다이내믹 시뮬레이터 & 보고서 생성기</h1></div>
 
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <h1><span style="color: #E3000F;">SHINSEGAE</span> FOOD</h1>
-            <p><strong>Daily FoodIntel</strong> - 당신의 업무를 위한 맞춤형 인사이트</p>
-        </header>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchMainTab('tab-db')">🏢 1. 전사적 지식베이스 (DB Hub)</button>
+        <button class="tab-btn" onclick="switchMainTab('tab-review')">💡 2. AI 자동 기획 및 협업 데스크</button>
+        <button class="tab-btn" onclick="switchMainTab('tab-ppt')">📑 3. 경영진 PPT 보고서</button>
+    </div>
 
-        <!-- AI Briefing -->
-        <section class="card ai-card">
-            <h2>🤖 오늘의 AI 브리핑 <button class="refresh-btn" onclick="refreshAIBriefing(this)" title="새로운 AI 브리핑 스캔">🔄</button></h2>
-            <span class="date" id="current-date"></span>
-            
-            <ul class="briefing-list" id="ai-briefing-list">
-                <!-- Javascript Data rendered here -->
-            </ul>
-
-            <div class="ai-analysis">
-                <h4>💡 AI 업황 분석 및 전략 제안</h4>
-                <p id="ai-analysis-text">
-                    <!-- Javascript Data rendered here -->
-                </p>
-            </div>
-        </section>
-
-        <h2 class="section-title">🏢 부서별 실시간 데이터 피드</h2>
-
-        <!-- Grid Layout -->
-        <div class="grid">
-            <!-- R&D / 마케팅 -->
-            <div class="dept-card">
-                <h3>🎯 R&D / 마케팅 <button class="refresh-btn" onclick="refreshData('rnd', this)" title="새로운 정보 불러오기">🔄</button></h3>
-                <ul class="dept-news-list" id="list-rnd">
-                </ul>
-            </div>
-            
-            <!-- 생산 / 설비 -->
-            <div class="dept-card">
-                <h3>🏭 생산 / 설비 <button class="refresh-btn" onclick="refreshData('prod', this)" title="새로운 정보 불러오기">🔄</button></h3>
-                <ul class="dept-news-list" id="list-prod">
-                </ul>
-            </div>
-
-            <!-- 안전 / 품질 -->
-            <div class="dept-card">
-                <h3>🛡️ 안전 / 품질 <button class="refresh-btn" onclick="refreshData('safety', this)" title="새로운 정보 불러오기">🔄</button></h3>
-                <ul class="dept-news-list" id="list-safety">
-                </ul>
-            </div>
-
-            <!-- 기획 / 구매 -->
-            <div class="dept-card">
-                <h3>📊 기획 / 구매 <button class="refresh-btn" onclick="refreshData('plan', this)" title="새로운 정보 불러오기">🔄</button></h3>
-                <ul class="dept-news-list" id="list-plan">
-                </ul>
-            </div>
-
-            <!-- B2B / 영업 -->
-            <div class="dept-card">
-                <h3>💼 B2B / 영업 <button class="refresh-btn" onclick="refreshData('sales', this)" title="새로운 정보 불러오기">🔄</button></h3>
-                <ul class="dept-news-list" id="list-sales">
-                </ul>
+    <div class="content">
+        <!-- Tab 1: DB HUB -->
+        <div id="tab-db" class="main-section active">
+            <div class="db-layout">
+                <div class="db-sidebar">
+                    <button class="d-btn active" onclick="switchDbTab('db-marketing', this)">🎯 전략 및 기획/마케팅</button>
+                    <button class="d-btn" onclick="switchDbTab('db-pur', this)">🛒 원부자재 매입팀</button>
+                    <button class="d-btn" onclick="switchDbTab('db-rnd', this)">🧪 상품개발 (R&D)</button>
+                    <button class="d-btn" onclick="switchDbTab('db-prod', this)">🏭 공무 / 생산 통합</button>
+                    <button class="d-btn" onclick="switchDbTab('db-qa', this)">🛡️ 식약 규제 / QA팀</button>
+                    <button class="d-btn" onclick="switchDbTab('db-des', this)">🎨 패키징 디자인팀</button>
+                </div>
+                <div class="db-content">
+                    <div id="db-marketing" class="db-section active"><div class="db-title">전략/마케팅 지식베이스</div><textarea id="db-val-mkt" class="input-box" style="min-height:100px;"></textarea></div>
+                    <div id="db-pur" class="db-section"><div class="db-title">원부자재 매입 지식베이스</div><textarea id="db-val-pur" class="input-box" style="min-height:100px;"></textarea></div>
+                    <div id="db-rnd" class="db-section"><div class="db-title">상품개발(R&D) 지식베이스</div><textarea id="db-val-rnd" class="input-box" style="min-height:100px;"></textarea></div>
+                    <div id="db-prod" class="db-section"><div class="db-title">공무 및 생산 지식베이스</div><textarea id="db-val-prod" class="input-box" style="min-height:120px;"></textarea></div>
+                    <div id="db-qa" class="db-section"><div class="db-title">규제/QA팀 지식베이스</div><textarea id="db-val-qa" class="input-box" style="min-height:100px;"></textarea></div>
+                    <div id="db-des" class="db-section"><div class="db-title">패키징 디자인 지식베이스</div><textarea id="db-val-des" class="input-box" style="min-height:100px;"></textarea></div>
+                    <p style="font-size:13px; color:#E3000F; font-weight:800; text-align:right;">※ 사용자가 기안을 던지면 외부 서버와 동기화되어 내용이 동적으로 뒤바뀝니다.</p>
+                </div>
             </div>
         </div>
 
-        <!-- Competitors & Global Section -->
-        <h2 class="section-title" style="margin-top: 64px;">🌐 경쟁사 및 글로벌 선도 기업 동향</h2>
-        
-        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));">
-            <!-- 국내 경쟁사 -->
-            <div class="dept-card" style="border-top: 5px solid #2B4E76; background-color: #F8FAFC;">
-                <h3>🇰🇷 국내 주요 경쟁사 동향 <button class="refresh-btn" onclick="refreshData('domestic', this)" title="새로운 정보 불러오기">🔄</button></h3>
-                <ul class="dept-news-list" id="list-domestic">
-                </ul>
+        <!-- Tab 2: Review (AI 시뮬레이션) -->
+        <div id="tab-review" class="main-section">
+            <div class="card">
+                <h2 style="margin-top:0;">💡 대화형 AI 전사 직원 통합 시뮬레이터</h2>
+                <div style="display:flex; gap:16px;">
+                    <div class="input-group" style="flex:3; margin-bottom:0;">
+                        <label class="input-label" style="font-size:16px;">어떤 신제품(HMR)을 만들고 싶으신가요?</label>
+                        <textarea id="val-idea" class="input-box" style="min-height:60px; font-size:18px; font-weight:900; color:#1967D2;" placeholder="예: 삼계탕 상온 파우치 / 에어프라이어 꿔바로우">돼지고기 고추장 양념육(냉장, 피코크, 300g)</textarea>
+                    </div>
+                    <div class="input-group" style="flex:1; margin-bottom:0;">
+                        <label class="input-label" style="font-size:16px; color:#E3000F;">목표 출시(런칭) 예정일</label>
+                        <input type="date" id="target-date" class="input-box" style="height:60px; font-size:16px;">
+                    </div>
+                </div>
+                <button class="start-btn" onclick="startDynamicSimulation()">모든 부서 소집 및 릴레이 검증 가동 🚀</button>
             </div>
+            <div id="loading-box" class="loading-box">
+                <div class="load-line" id="load-1"></div><div class="load-line" id="load-2"></div><div class="load-line" id="load-3"></div>
+            </div>
+            <div id="relay-feed"></div>
+        </div>
 
-            <!-- 해외 기업 -->
-            <div class="dept-card" style="border-top: 5px solid #10B981; background-color: #F0FDF4;">
-                <h3>🌎 해외 선도 기업 인사이트 <button class="refresh-btn" onclick="refreshData('global', this)" title="새로운 정보 불러오기">🔄</button></h3>
-                <ul class="dept-news-list" id="list-global">
-                </ul>
+        <!-- Tab 3: PPT Generator -->
+        <div id="tab-ppt" class="main-section">
+            <h2 style="margin-bottom:8px;">📑 자동 생성된 경영진 보고용 Executive PPT</h2>
+            <p style="color:#666; margin-bottom:24px; font-weight:700;">시뮬레이션(2번 탭)이 완료되면 아래 슬라이드에 핵심 내용이 자동으로 채워져 분할 보고 서식이 완성됩니다.</p>
+            <div class="ppt-wrapper" id="ppt-container">
+                <div class="ppt-empty-state">⚠️ 시뮬레이터를 먼저 가동해 주세요.</div>
             </div>
         </div>
     </div>
 
+    <!-- SCRIPT -->
     <script>
-        // Set dynamic date
-        const today = new Date();
-        const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-        document.getElementById('current-date').innerText = today.toLocaleDateString('ko-KR', options) + ' 브리핑';
+        const DATE_ELEM = document.getElementById('target-date');
+        const today = new Date(); today.setDate(today.getDate() + 90);
+        DATE_ELEM.value = today.toISOString().split('T')[0];
 
-        // AI Briefing Data containing rich links pointing to actual relevant search queries
-        const aiBriefingData = [
-            {
-                list: [
-                    { text: "[속보] 정부, '푸드테크 산업 육성법' 시행령 오늘 11일 최종 가이드라인 발표 ↗️", link: "https://search.naver.com/search.naver?query=식약처+푸드테크+산업육성법+시행" },
-                    { text: "[마이닝] 국내 B2B 식자재 스마트 물류센터 결품률, AI 예측 도입 후 30% 개선 ↗️", link: "https://search.naver.com/search.naver?query=B2B+식자재+유통+AI+수요예측" },
-                    { text: "[상권동향] 올해 1분기 수도권 오피스 '무인 간편식 다이닝(HMR)' 매출 전년비 150% 급상승 ↗️", link: "https://search.naver.com/search.naver?query=오피스상권+무인식당+간편식+매출" }
+        function switchMainTab(targetId) {
+            document.querySelectorAll('.main-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tabs .tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(targetId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function switchDbTab(targetId, btnEl) {
+            document.querySelectorAll('.db-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.d-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(targetId).classList.add('active');
+            btnEl.classList.add('active');
+        }
+
+        function toggleAccordion(headEl) {
+            headEl.classList.toggle('open');
+            const body = headEl.nextElementSibling;
+            if(body.style.display === "block") { body.style.display = "none"; headEl.querySelector('.accordion-icon').innerText = "+"; } 
+            else { body.style.display = "block"; headEl.querySelector('.accordion-icon').innerText = "−"; }
+        }
+
+        const DB_SCENARIOS = {
+            samgyetang: {
+                keywords: ['삼계탕', '국', '탕', '반계탕', '레토르트'],
+                db: {
+                    mkt: "[PEACOCK 브랜드 가이드]\n- 유통: 이마트 전용 직영 매대(엔드캡) 우선배치\n- 디자인: 하이엔드 다크/골드 컬러 적용 必\n- 타겟: 고급 홈파티 1~2가구",
+                    pur: "[원육 시세]\n- 브라질산 냉동 닭고기: kg당 3,400원\n- 국내산 생닭 가슴살/다리살: kg당 5,800원\n- 수삼: Root당 800원",
+                    rnd: "[BOM 가이드]\n- 발골 순살육 60:40 황금 텍스처 규격\n- 나트륨 800mg 미만 준수.",
+                    prod: "[음성공장 3라인 레토르트]\n- 액상 파우치 씰링 용량 한계: 500g 노즐 (안전율 감안)\n- 일 최대 CAPA: 12,000봉",
+                    qa: "[HACCP 열탕 규정]\n- 121도 레토르트 15분 유지 의무화 (F값 4.0 이상 멸균 필수)\n- 검출 1순위: 뼈 조각/이물",
+                    des: "[특수 인쇄 규격]\n- 120도 열수 압력을 견디는 다중합지 파우치 적용\n- 브랜드 폰트(윤고딕 패밀리) 의무."
+                },
+                images: [
+                    'https://images.unsplash.com/photo-1549429402-ddc5c179c3ee?auto=format&w=800', 
+                    'https://images.unsplash.com/photo-1598514982205-f36b96d1e8d4?auto=format&w=800', 
+                    'file:///C:/Users/%EA%B0%95%EC%A3%BC%EC%98%81/.gemini/antigravity/brain/321ef2ea-8146-4d88-8f59-3d49757dbad1/peacock_samgyetang_1775907609819.png'
                 ],
-                analysis: "오늘 발표되는 <strong>'푸드테크 육성법'</strong>에 선제적으로 대응하여, 신세계푸드는 B2B 납품 단가 최적화를 위한 스마트팩토리 고도화(데이터 수집 의무화)를 최우선으로 검토해야 합니다. 아울러 폭발적으로 성장 중인 <strong>오피스 무인 간편식 플랫폼</strong> 선점을 위해 기업 복지용 샌드위치/케어푸드 전용 벤딩머신 파일럿 라인을 이달 내 투입할 것을 권장합니다."
+                processPhotos: [
+                    { u: 'file:///C:/Users/%EA%B0%95%EC%A3%BC%EC%98%81/.gemini/antigravity/brain/321ef2ea-8146-4d88-8f59-3d49757dbad1/samgyetang_prep_1775910866018.png', c: 'STEP 1: 전처리 및 원료 육수 배합장' },
+                    { u: 'file:///C:/Users/%EA%B0%95%EC%A3%BC%EC%98%81/.gemini/antigravity/brain/321ef2ea-8146-4d88-8f59-3d49757dbad1/samgyetang_retort_1775910884144.png', c: 'STEP 2: [CCP] 고온고압 레토르트 멸균기' }
+                ],
+                title: "피코크 프리미엄 순살 삼계탕", cost: "4,800원", targetPr: "8,980원", margin: "46%",
+                c1: "CJ 비비고 통뼈 삼계탕", p1: "11,980원", c2: "하림 고향 삼계탕", p2: "12,500원",
+                cogsList: [ {n:"국내산 최고급 냉장육 생육", v:"2,650원"}, {n:"특수 합지 인쇄/패키징 외주비", v:"400원"}, {n:"설비광열 및 인건비", v:"900원"}, {n:"유통 고정 운반비", v:"850원"}],
+                strat_txt: "뼈 없는 순살로 고객 편의성을 살리고 전량 국내산으로 극강의 품질을 챙깁니다. 매입 원가는 높으나 이마트 직영 생태계(수수료 0%)를 통해 경쟁사 대비 25% 가격 파괴하여 시장을 완전히 장악합니다.",
+                risk_txt: "음성공장 500g 노즐 교체(2500만 원, 4주)를 거부하고, 뼈 부피 100g을 뺀 '순살 500g'으로 협상함으로써 공사비 0원, 빠른 제품화, 파우치 터짐 제로 달성.",
+                procSteps: [
+                    { n: "원료 입고/보관", e: "냉동/냉장 창고", c: false },
+                    { n: "육류 전처리", e: "고주파 해동기, 진동 세척기", c: false },
+                    { n: "육수배합", e: "500L 스팀 재킷 케틀", c: false },
+                    { n: "원료 가열/내포장", e: "500g 로터리 씰링 충전기", c: false },
+                    { n: "레토르트 살균", e: "고온고압 레토르트 멸균기", c: true },
+                    { n: "이물/외포장", e: "X-Ray 및 중량선별기", c: true },
+                    { n: "보관/출하", e: "오토 팰러타이저, 물류창고", c: false }
+                ]
             },
-            {
-                list: [
-                    { text: "[수주공시] 어제(10일) 마감된 하반기 수도권 최대 규모 '메디푸드' 위탁 급식 입찰 분석 리포트 ↗️", link: "https://search.naver.com/search.naver?query=수도권+대형병원+위탁급식+메디푸드+수주" },
-                    { text: "[원자재경보] 유럽 폭염 여파로 국제 곡물(밀류) 선물 가격 심리적 지지선 이탈 조짐 ↗️", link: "https://search.naver.com/search.naver?query=유럽폭염+국제곡물가격+밀선물+급등" },
-                    { text: "[신제품동향] 경쟁사(아워홈/현대그린푸드), 단백질 강화형 '액티브 시니어 밀키트' 공격적 출시 ↗️", link: "https://search.naver.com/search.naver?query=시니어+케어푸드+경쟁+신제품+출시" }
+            gubarou: {
+                keywords: ['꿔바로우', '탕수육', '치킨', '튀김', '냉동'],
+                db: {
+                    mkt: "[NO BRAND 냉동가이드]\n- 포지셔닝: 초가성비 에어프라이어 야식 매대 평정\n- 시그니처 옐로우(#F3C300) 아이덴티티",
+                    pur: "[돼지고기 시세]\n- 국내 한돈협회 공급 장기계약 등심 잔여 10톤 보유 중 (매몰비용)\n- 중국 직수입 완제품: kg당 3,800원",
+                    rnd: "[튀김 BOM 규격]\n- 에어프라이어 시 바삭함을 위해 감자:찹쌀 전분 7:3 유지.\n- 공장 내 1차 부분 유탕(기름 코팅) 실시 조건.",
+                    prod: "[이천공장 연속튀김기 1라인]\n- 터널식 급랭 가동 여력 (IQF)\n- 튀김 기름 오염(산가 증가)이 가장 큰 병목 문제점.",
+                    qa: "[HACCP 냉동 기준]\n- 튀김유 기름 산가(Acid Value) 2.5 절대 넘기면 안 됨.\n- 중심온도 75도에서 연속 통과 의무.",
+                    des: "[냉동 지퍼백 규격]\n- 영하 40도 파단 테스트 통과 PE 합지\n- 전면 제품 내용물 노출을 위한 투명 윈도우 필수."
+                },
+                images: [
+                    'https://images.unsplash.com/photo-1627308595260-6faadddf3d75?auto=format&w=800', 
+                    'https://images.unsplash.com/photo-1562565652-a6e87d6928e1?auto=format&w=800', 
+                    'https://images.unsplash.com/photo-1622312686861-f0bd7702ccbd?auto=format&w=800'
                 ],
-                analysis: "경쟁사들의 <strong>'액티브 시니어(Active Senior)' 특화 케어푸드</strong> 공세가 거세지고 있습니다. 신세계푸드는 기존 외식 인프라를 활용한 프리미엄 케어푸드 라인업으로 차별화를 꾀해야 하며, 당장 오늘 국제 밀 가격 변동성에 대비해 베이커리 부문 원자재 3분기 선도거래 물량을 즉각 재점검하시기 바랍니다."
+                processPhotos: [
+                    { u: 'file:///C:/Users/%EA%B0%95%EC%A3%BC%EC%98%81/.gemini/antigravity/brain/321ef2ea-8146-4d88-8f59-3d49757dbad1/gubarou_fryer_1775910899678.png', c: 'STEP 1: [CCP] 터널식 연속 유탕기 (가열)' },
+                    { u: 'file:///C:/Users/%EA%B0%95%EC%A3%BC%EC%98%81/.gemini/antigravity/brain/321ef2ea-8146-4d88-8f59-3d49757dbad1/gubarou_iqf_1775910919496.png', c: 'STEP 2: 터널 프리저 초저온 급속동결(IQF)' }
+                ],
+                title: "노브랜드 쫀득바삭 냉동 꿔바로우", cost: "3,350원", targetPr: "5,980원", margin: "43%",
+                c1: "풀무원 얇은피 꿔바로우", p1: "9,480원", c2: "오뚜기 오즈키친 탕수육", p2: "8,900원",
+                cogsList: [ {n:"사내 잉여 재고(한돈 등심) 출하", v:"1,700원"}, {n:"종이포장 및 냉동 윈도우 합지", v:"350원"}, {n:"기름 교체 감가 및 IQF 동결비", v:"850원"}, {n:"냉동 탑차 유통", v:"450원"}],
+                strat_txt: "당사에 남은 한돈 장기계약 잉여 원료를 전량 소진하여 단가를 무지막지하게 낮췄습니다. 노브랜드라는 박리다매 전략으로 풀무원 대비 37% 저렴하게 밀어붙여, 이마트 매대는 물론 SSG몰 전역의 상위권을 독식합니다.",
+                risk_txt: "이천 공단 튀김 기름 산가(2.5) 한계 때문에 4시간마다 라인을 세워야 할 위기가 있었으나, 고기를 완전히 튀기지 않고 '1분 초벌만 하고 시어링한 채 속은 급속냉동(IQF)'시키는 전략적 공정 타협으로 생산성을 미친 듯이 끌어올렸습니다.",
+                procSteps: [
+                    { n: "원육 입고/해동", e: "-20도 냉동고, 유수 해동기", c: false },
+                    { n: "염지 텀블링", e: "대형 진공 텀블러", c: false },
+                    { n: "반죽 코팅", e: "더블 배터링 머신 (Batter)", c: false },
+                    { n: "초벌 연속 유탕", e: "170도 터널식 연속 후라이어", c: true },
+                    { n: "급속동결(IQF)", e: "영하 40도 터널 프리저", c: false },
+                    { n: "내외포장 금검", e: "로터리포장기, 금속검출기", c: true },
+                    { n: "보관/출하", e: "냉동 전용 파렛트 랙", c: false }
+                ]
+            },
+            sandwich: {
+                keywords: ['샌드위치', '베이컨', '스타벅스', '스벅', '토스트'],
+                db: {
+                    mkt: "[스타벅스 B2B 공급 가이드]\n- 포지셔닝: 스타벅스 커피와 페어링되는 식사 대용 프리미엄 냉장 샌드위치\n- 유통: 전국 스타벅스 매장 쇼케이스 D-1 콜드체인 직납입\n- 패키지: 매장 내 보관이 용이하고 신선도가 노출되는 전면 투명 삼각 포장 적용",
+                    pur: "[원부자재 시세]\n- 샌드위치용 식빵(사내 베이커리 공장 직조달): 장당 150원\n- 미국산 프리미엄 훈연 베이컨: kg당 6,500원 (대량 계약)\n- 로메인/양상추 신선채소: 주간 시세 연동 (현재 kg당 2,500원 수준)",
+                    rnd: "[BOM 규격]\n- 빵 2장, 체다치즈 1장, 베이컨 2줄, 로메인 2장, 체다/에그마요스프레드 20g\n- 커피 산미와 어울리도록 스프레드 단맛(Brix)을 약간 낮춘 B.E.L.T 스타일 설계",
+                    prod: "[샌드위치 신선 조립 라인]\n- 일일 스타벅스 매장 발주량 대응을 위한 더블 컨베이어 수작업 라인 배정\n- 채소류 절단 후 자동 버블 세척 라인 풀가동",
+                    qa: "[HACCP 냉장/신선 기준]\n- 가장 취약한 '생채소' 교차오염 방지: 차아염소산나트륨 100ppm 3단 버블 세척 필수 (핵심 CCP)\n- 최종 완제품 중심온도 5도 이하 칠링 및 X-Ray 의무 통과",
+                    des: "[패키징 규격]\n- 스타벅스 지정 삼각 투명 단면 PET 용기\n- 용기 전면: 영양성분 및 스타벅스 사이렌 블랙 로고 스티커 부착"
+                },
+                images: [
+                    'file:///C:/Users/%EA%B0%95%EC%A3%BC%EC%98%81/.gemini/antigravity/brain/321ef2ea-8146-4d88-8f59-3d49757dbad1/sandwich_promo1_1775911812281.png', 
+                    'file:///C:/Users/%EA%B0%95%EC%A3%BC%EC%98%81/.gemini/antigravity/brain/321ef2ea-8146-4d88-8f59-3d49757dbad1/sandwich_promo2_1775911826395.png', 
+                    'file:///C:/Users/%EA%B0%95%EC%A3%BC%EC%98%81/.gemini/antigravity/brain/321ef2ea-8146-4d88-8f59-3d49757dbad1/sandwich_promo3_1775911840294.png'
+                ],
+                processPhotos: [
+                    { u: 'file:///C:/Users/%EA%B0%95%EC%A3%BC%EC%98%81/.gemini/antigravity/brain/321ef2ea-8146-4d88-8f59-3d49757dbad1/sandwich_proc2_1775911875359.png', c: 'STEP 1: [CCP] 3단 자동 버블 세척 (미생물 제균)' },
+                    { u: 'file:///C:/Users/%EA%B0%95%EC%A3%BC%EC%98%81/.gemini/antigravity/brain/321ef2ea-8146-4d88-8f59-3d49757dbad1/sandwich_proc1_1775911857179.png', c: 'STEP 2: 클린룸 컨베이어 수동 어셈블리(조립) 라인' }
+                ],
+                title: "스타벅스 베이컨 토스트 샌드위치 (B2B 전용)", cost: "1,750원", targetPr: "5,900원", margin: "70%",
+                c1: "파리바게뜨 델리 샌드위치", p1: "6,500원", c2: "투썸 B.E.L.T 샌드위치", p2: "6,000원",
+                cogsList: [ {n:"자체공장 식빵/프리미엄 베이컨", v:"650원"}, {n:"치즈/에그마요/신선채소", v:"450원"}, {n:"조립 인건/설비 감가상각", v:"450원"}, {n:"삼각용기 및 콜드체인 물류", v:"200원"}],
+                strat_txt: "스타벅스라는 프리미엄 채널 독점 납품을 통해 별도의 B2C 마케팅/광고비가 0원입니다. 당사 사내 베이커리 공장의 식빵을 내재화 조달하여 원가를 극한으로 억제했습니다. 70%라는 기적적인 폭발적 영업이익률을 뿜어내는 궁극의 B2B 캐시카우 라인업입니다.",
+                risk_txt: "가열 공정이 없는 '비가열 신선식품'이므로, 양상추 등 생채소의 미생물 리스크가 가장 높습니다. 이에 채소류를 세척 시 [차아염소산나트륨(100ppm) 3단계 버블세척] 라인을 핵심 CCP로 전격 의무화하여 식중독균 리스크를 사전에 소거했습니다. 이후 출하 시 중심온도를 5도 이하로 칠링 강제화하여 보존성을 한계치까지 확장합니다.",
+                procSteps: [
+                    { n: "부재료 입고", e: "냉장/실온 창고", c: false },
+                    { n: "채소 버블세척", e: "차아염소산 자동세척기", c: true },
+                    { n: "빵 컷팅/소스", e: "샌드위치 조립 컨베이어", c: false },
+                    { n: "토핑 수작업", e: "수작업 어셈블리 존", c: false },
+                    { n: "삼각성형 컷팅", e: "초음파 커팅 머신", c: false },
+                    { n: "포장/금속검출", e: "삼각 씰러 및 X-Ray", c: true },
+                    { n: "예냉 및 출하", e: "콜드체인 칠링룸(5도)", c: false }
+                ]
+            },
+            spicy_pork: {
+                keywords: ['돼지고기', '고추장', '양념육', '제육', '불고기', '냉장'],
+                db: {
+                    mkt: "[PEACOCK 냉장 가이드]\n- 포지셔닝: 1~2인 가구 저녁 반찬용 피코크 프리미엄 냉장육\n- 유통: 이마트 원물 축산 매대 및 프리미엄 냉장매대 듀얼진열\n- 패키지: 내부가 일부 보이는 종이 슬리브 라벨 투명 MAP(가스치환) 포장 적용 必",
+                    pur: "[원육 및 소스 시세]\n- 스페인/미국 냉동 목전지: kg당 4,200원\n- 국내산(한돈) 뒷다리살(후지) 냉장육: kg당 4,500원\n- 자체개발 비법 고추장 숙성 베이스: kg당 2,800원",
+                    rnd: "[BOM 규격]\n- 육함량 비율: 고기(70%) : 소스(25%) : 야채(5%)\n- 식감 극대화를 위한 3mm 정밀 슬라이스\n- 육즙 보존을 위한 72시간 0도 저온 숙성 공법 필수",
+                    prod: "[육가공 냉장 라인]\n- 양념육 전용 진공 텀블러 및 냉장 고속 슬라이서 가동 확보완료\n- 포장기: MAP(가스치환 포장) 씰러 일 8,000팩 한계 CAPA 확인",
+                    qa: "[HACCP 냉장/비가열 기준]\n- 조리 전 생육 상태이므로 1순위 교차오염 절대 방지\n- 보관/유통 온도 0~5도 콜드체인 완벽 제어 필수\n- 미생물 증식 억제 유통기한: MAP 포장 기준 14일 책정",
+                    des: "[패키징 인쇄 규격]\n- 산소 차단성이 극히 높은 High-Barrier PP 트레이 필름 적용\n- 외부 종이 슬리브 전면에 군침 도는 조리예 사진 및 '피코크 골드' 로고 후가공 타각"
+                },
+                images: [
+                    'file:///C:/Users/%EA%B0%95%EC%A3%BC%EC%98%81/.gemini/antigravity/brain/321ef2ea-8146-4d88-8f59-3d49757dbad1/spicy_pork_promo1_1775911132266.png', 
+                    'file:///C:/Users/%EA%B0%95%EC%A3%BC%EC%98%81/.gemini/antigravity/brain/321ef2ea-8146-4d88-8f59-3d49757dbad1/spicy_pork_promo2_1775911147142.png', 
+                    'file:///C:/Users/%EA%B0%95%EC%A3%BC%EC%98%81/.gemini/antigravity/brain/321ef2ea-8146-4d88-8f59-3d49757dbad1/spicy_pork_promo3_1775911160221.png'
+                ],
+                processPhotos: [
+                    { u: 'file:///C:/Users/%EA%B0%95%EC%A3%BC%EC%98%81/.gemini/antigravity/brain/321ef2ea-8146-4d88-8f59-3d49757dbad1/spicy_pork_proc1_1775911175239.png', c: 'STEP 1: 냉장 생육 진공 텀블러 염지숙성' },
+                    { u: 'file:///C:/Users/%EA%B0%95%EC%A3%BC%EC%98%81/.gemini/antigravity/brain/321ef2ea-8146-4d88-8f59-3d49757dbad1/spicy_pork_proc2_1775911190173.png', c: 'STEP 2: [CCP] 금속검출 및 MAP 가스치환 포장' }
+                ],
+                title: "피코크 매콤달콤 한돈 고추장 양념육", cost: "2,200원", targetPr: "5,980원", margin: "63%",
+                c1: "CJ 고메 제육 불고기", p1: "6,980원", c2: "풀무원 얇은피 불고기", p2: "7,480원",
+                cogsList: [ {n:"국내산 무항생제 한돈 후지육", v:"1,100원"}, {n:"특제 고추장 소스/신선대파", v:"400원"}, {n:"종이띠지 및 MAP 플라스틱/필름", v:"300원"}, {n:"0도 냉장 콜드체인 물류/보관비", v:"400원"}],
+                strat_txt: "수입육 대신 한돈을 전격 투입하면서도 부위 블렌딩을 극한으로 최적화하여 원가를 억제했습니다. 경쟁사 대비 최소 1,000원 이상 압도적으로 저렴한 타겟가(5,980원)를 꽂아 넣어 이마트 1~2인 가구 축산 냉장 매대를 모조리 흡수할 전략입니다.",
+                risk_txt: "냉장 비가열 양념육 특유의 짧은 유통기한(7일 미만) 한계로 대규모 반품/파기 리스크가 지적되었으나, 일반 진공포장 대신 공정을 완전히 선회하여 [MAP 가스치환 충전포장(산소제거/질소투입)] 기술을 채택. 씰링과 동시에 미생물 증식을 원천 단절시켜 유통기한을 14일까지 2배 이상 연장하는 헷지 기술을 성공시켰습니다.",
+                procSteps: [
+                    { n: "원상태 검수", e: "냉장/해동실", c: false },
+                    { n: "원육 슬라이스", e: "미트 슬라이서(3mm)", c: false },
+                    { n: "특제소스 배합", e: "믹싱 탱크", c: false },
+                    { n: "저온 텀블링", e: "고속 진공 텀블러", c: false },
+                    { n: "계량/금속검출", e: "다중웨이어/금속검출기", c: true },
+                    { n: "MAP 가스포장", e: "로터리 가스 씰러", c: true },
+                    { n: "냉장 보관출하", e: "콜드체인 창고 (0~5도)", c: false }
+                ]
             }
-        ];
-
-        // Specific, targeted links instead of just generic root domains
-        const feedData = {
-            'rnd': [
-                [
-                    { tag: '트렌드', label: '실버 세대 겨냥한 \'연화식/케어푸드\' 시장 규모 2조 5천억 돌파 전망', link: 'https://search.naver.com/search.naver?query=케어푸드+시장규모+2조', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '신제품', label: '글로벌 식품기업들, 지속가능한 \'해조류 기반\' 기능성 식품에 대규모 투자', link: 'https://search.naver.com/search.naver?query=해조류+기반+대체+기능성식품', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '소비동향', label: '1인가구 증가로 인한 \'소용량 프리미엄 밀키트\' 매출 전년비 45% 상승', link: 'https://search.naver.com/search.naver?query=소용량+프리미엄+밀키트+매출', tBg: '#F3F4F6', tColor: '#555' }
-                ],
-                [
-                    { tag: '제과트렌드', label: '비건 인증(Vegan) 베이커리/디저트 시장 매년 20% 이상 고성장 기조', link: 'https://search.naver.com/search.naver?query=비건+베이커리+고성장', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '신소재', label: '대체당(스테비아/알룰로스) 활용 저당·제로 칼로리 소스 라인업 강화', link: 'https://search.naver.com/search.naver?query=대체당+스테비아+알룰로스+소스', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '소비동향', label: '헬시플레저(Healthy Pleasure) 열풍에 맞춘 식물성 단백질 강화 식단', link: 'https://search.naver.com/search.naver?query=헬시플레저+고단백질+식단', tBg: '#F3F4F6', tColor: '#555' }
-                ]
-            ],
-            'prod': [
-                [
-                    { tag: '스마트팩토리', label: '식품 공정 내 비전 AI 검수 시스템 도입으로 패키징 불량률 99% 감소', link: 'https://search.naver.com/search.naver?query=식품+비전+AI+검수시스템+불량률', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '로보틱스', label: '식재료 전처리 자동화 로봇 전면 도입 시 제조 공정 납품 단가 절감', link: 'https://search.naver.com/search.naver?query=식재료+전처리+자동화로봇', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '유지보수', label: 'IoT 센서 기반 주요 가공설비 \'예지 보전\' 선제적 도입 솔루션 동향', link: 'https://search.naver.com/search.naver?query=스마트팩토리+설비+예지보전', tBg: '#F3F4F6', tColor: '#555' }
-                ],
-                [
-                    { tag: '스마트팩토리', label: '공장 데이터 기반 에너지 최적화 시스템 설치로 탄소 배출량 15% 감축', link: 'https://search.naver.com/search.naver?query=식품공장+에너지+최적화+FEMS', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '포장자동화', label: 'HMR 패키징 라인 무인화 로봇 투입을 통한 일일 포장 생산성 3배 증대', link: 'https://search.naver.com/search.naver?query=HMR+포장+무인화로봇', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '유지보수', label: '음향 데이터(Acoustic) 딥러닝 분석을 통한 모터 결함 조기 예측 기술', link: 'https://search.naver.com/search.naver?query=모터+음향데이터+결함진단+예지보전', tBg: '#F3F4F6', tColor: '#555' }
-                ]
-            ],
-            'safety': [
-                [
-                    { tag: '규제동향', label: '식약처, 식품 이력추적 의무적용 대상 및 건강기능식품 품목 대폭 확대', link: 'https://search.naver.com/search.naver?query=식약처+식품이력추적+의무적용', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '이슈경보', label: '수입 향신료 채소류 내 잔류농약/미생물 초과 검출 선제적 전수조사 알림', link: 'https://search.naver.com/search.naver?query=수입식품+잔류농약+전수조사', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '글로벌', label: '미국 FSMA 204(식품안전현대화법) 정보 기록 의무 강화 대응 블록체인', link: 'https://search.naver.com/search.naver?query=미국+FSMA+204+식품추적', tBg: '#F3F4F6', tColor: '#555' }
-                ],
-                [
-                    { tag: '환경규제', label: '친환경 패키징 및 재생 페트(rPET) 식품 용기 사용 가이드라인 의무화', link: 'https://search.naver.com/search.naver?query=식품업계+친환경+포장+의무화', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '위생점검', label: '하절기 고위험군 미생물(살모넬라 등) 선별 예방을 위한 특별 위생 매뉴얼', link: 'https://search.naver.com/search.naver?query=하절기+식중독+위생점검+매뉴얼', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '글로벌', label: '동남아시아/일본 지정 첨가물 성분 규격 및 수출입 신고 기준 개정안', link: 'https://search.naver.com/search.naver?query=일본+식품첨가물+수출+규격', tBg: '#F3F4F6', tColor: '#555' }
-                ]
-            ],
-            'plan': [
-                [
-                    { tag: '원자재', label: '남미 기후 변화 여파로 인한 팜유/대두 단가 3분기 인상 전망 선제 대응', link: 'https://search.naver.com/search.naver?query=대두유+팜유+가격+인상전망', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '환율/경제', label: '강달러 장기화(환율 리스크)에 따른 직수입 식자재 마진 방어/헤지 전략', link: 'https://search.naver.com/search.naver?query=강달러+수입+식자재+원가+부담', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '공급망', label: '해운 운임 지수(SCFI) 급등락 변동에 따른 4분기 글로벌 물류 비용 분석', link: 'https://search.naver.com/search.naver?query=해운운임지수+SCFI+물류비', tBg: '#F3F4F6', tColor: '#555' }
-                ],
-                [
-                    { tag: '원자재', label: '엘니뇨 현상 심화 조짐에 따른 국제 소맥(밀가루) 선물 2개월 연속 상승세', link: 'https://search.naver.com/search.naver?query=국제+소맥+선물가격+밀가루', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '환율/경제', label: '외식물가지수 최고치 갱신에 따른 대형 프랜차이즈 원가 구조 절감 TFT', link: 'https://search.naver.com/search.naver?query=외식물가지수+원가절감', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '공급망', label: '중동 사태로 인한 유럽행 물동량 적체 심화 빛 대체 항공 운송 경로 확보', link: 'https://search.naver.com/search.naver?query=글로벌+물류대란+우회항로', tBg: '#F3F4F6', tColor: '#555' }
-                ]
-            ],
-            'sales': [
-                [
-                    { tag: '공공입찰', label: '2026년 하반기 수도권 공공기관 및 군부대 구내식당 대규모 위탁운영 공고', link: 'https://search.naver.com/search.naver?query=공공기관+구내식당+위탁운영+입찰', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '외식납품', label: '대형 B2C 커피 프랜차이즈의 프리미엄 디저트/베이커리 B2B 납품 수요 급증', link: 'https://search.naver.com/search.naver?query=프랜차이즈+베이커리+디저트+B2B+납품', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '시장분석', label: '기업 임직원 조식 복지 확대로 인한 \'프리미엄 샐러드·샌드위치\' 구독 확대', link: 'https://search.naver.com/search.naver?query=오피스+조식+구독+샐러드+복지', tBg: '#F3F4F6', tColor: '#555' }
-                ],
-                [
-                    { tag: '공공입찰', label: '수도권 주요 대형 종합병원 환자/직원 복지용 메디푸드 위탁 급식 평가', link: 'https://search.naver.com/search.naver?query=대형병원+위탁급식+메디푸드', tBg: '#F3F4F6', tColor: '#555' },
-                    { tag: '외식납품', label: '유치원·초중고 친환경 무상급식 단가 인상에 기반한 프리미엄 영업망 타진', link: 'https://search.naver.com/search.naver?query=친환경+학교급식+식자재+단가', tBg: '#F3F4F6', tColor: '#555' },
-                    { 무인상권: '트렌드', label: '공유 오피스 및 도심권 타겟 \'스마트 냉장고 무인 간편식 자판기\' 점유율 확보', link: 'https://search.naver.com/search.naver?query=오피스+스마트+간편식+냉장고', tBg: '#F3F4F6', tColor: '#555' }
-                ]
-            ],
-            'domestic': [
-                [
-                    { tag: 'CJ프레시웨이', label: 'B2B 식자재 유통 스마트 물류 센터(Fulfillment) 신규 거점 오픈 및 자동화 가속', link: 'https://search.naver.com/search.naver?query=CJ프레시웨이+스마트물류센터', tBg: '#DEE4EE', tColor: '#2B4E76' },
-                    { tag: '아워홈', label: '구내식당 배식 동선 단축용 푸드테크 로봇/비전스캐너 무인 계산대 대거 확장', link: 'https://search.naver.com/search.naver?query=아워홈+푸드테크+비전스캐너', tBg: '#DEE4EE', tColor: '#2B4E76' },
-                    { tag: '현대그린푸드', label: '케어푸드 전문 브랜드 \'그리팅\' 정기구독 서비스 B2B 복지몰 매출 폭발적 성장', link: 'https://search.naver.com/search.naver?query=현대그린푸드+그리팅+기업복지', tBg: '#DEE4EE', tColor: '#2B4E76' }
-                ],
-                [
-                    { tag: 'CJ프레시웨이', label: '외식 솔루션 컨설팅(외식 비즈니스 파트너) 강화를 통한 프랜차이즈 락인 전략', link: 'https://search.naver.com/search.naver?query=CJ프레시웨이+외식솔루션+컨설팅', tBg: '#DEE4EE', tColor: '#2B4E76' },
-                    { tag: '아워홈', label: '프리미엄 시니어타운 전용 연화식 식단 개발 및 케어푸드 B2B 민간 납품 본격화', link: 'https://search.naver.com/search.naver?query=아워홈+시니어타운+케어푸드', tBg: '#DEE4EE', tColor: '#2B4E76' },
-                    { tag: '현대그린푸드', label: '질환맞춤형 식단(메디푸드) 스타트업 파트너십 및 수도권 대형 종합병원 점유율', link: 'https://search.naver.com/search.naver?query=현대그린푸드+메디푸드+병원급식', tBg: '#DEE4EE', tColor: '#2B4E76' }
-                ]
-            ],
-            'global': [
-                [
-                    { tag: 'Aramark(미국)', label: '미국 스탠포드 등 대학교 캠퍼스 식당 내 스마트 무인 결제(Vision AI) 전면 도입', link: 'https://www.google.com/search?q=Aramark+AI+checkout+campus', tBg: '#D1FAE5', tColor: '#065F46' },
-                    { tag: 'Sodexo(프랑스)', label: '지속가능성 최우선 과제로 전 세계 사업장 플라스틱 제로 및 친환경 패키징 선언', link: 'https://www.google.com/search?q=Sodexo+sustainability+packaging', tBg: '#D1FAE5', tColor: '#065F46' },
-                    { tag: 'Sysco(미국)', label: '세계 최대 식자재 유통기업, 콜드체인 트럭 운송 최적화를 위한 물류 AI 스타트업 인수', link: 'https://www.google.com/search?q=Sysco+food+distribution+AI+acquisition', tBg: '#D1FAE5', tColor: '#065F46' }
-                ],
-                [
-                    { tag: 'Aramark(미국)', label: '탄소 중립 및 ESG 트렌드에 힘입어 전 세계 급식 메뉴 내 Plant-based 비중 40% 의무화', link: 'https://www.google.com/search?q=Aramark+plant+based+menu+carbon', tBg: '#D1FAE5', tColor: '#065F46' },
-                    { tag: 'Sodexo(프랑스)', label: '지능형 잔반 분석 시스템 WasteWatch 글로벌 전구장 연동으로 연간 음식물 쓰레기 50% 절감', link: 'https://www.google.com/search?q=Sodexo+WasteWatch+food+waste', tBg: '#D1FAE5', tColor: '#065F46' },
-                    { tag: 'Compass Group', label: '무인 조리 로봇 셰프 상용화 로드맵 발표 및 병원·오피스 내 완전 무인 자판기 식당 파일럿 개시', link: 'https://www.google.com/search?q=Compass+Group+robot+chef+automated+kitchen', tBg: '#D1FAE5', tColor: '#065F46' }
-                ]
-            ]
         };
 
-        const stateTracker = {
-            'ai': 0, 'rnd': 0, 'prod': 0, 'safety': 0, 'plan': 0, 'sales': 0, 'domestic': 0, 'global': 0
-        };
-
-        function renderList(targetId, dataArray) {
-            const listEl = document.getElementById(targetId);
-            listEl.innerHTML = '';
-            dataArray.forEach((item, index) => {
-                const li = document.createElement('li');
-                li.className = 'fade-in';
-                li.style.animationDelay = `${index * 0.05}s`;
-                li.innerHTML = `<a href="${item.link}" target="_blank"><span class="tag" style="background:${item.tBg}; color:${item.tColor};">${item.tag}</span> ${item.label}</a>`;
-                listEl.appendChild(li);
-            });
+        function getTimelineType(ideatxt) {
+            if(DB_SCENARIOS.sandwich.keywords.some(k => ideatxt.includes(k))) return 'sandwich';
+            if(DB_SCENARIOS.gubarou.keywords.some(k => ideatxt.includes(k))) return 'gubarou';
+            if(DB_SCENARIOS.spicy_pork.keywords.some(k => ideatxt.includes(k))) return 'spicy_pork';
+            if(DB_SCENARIOS.samgyetang.keywords.some(k => ideatxt.includes(k))) return 'samgyetang';
+            return 'dynamic';
         }
 
-        function renderAIBriefing(dataObj) {
-            const listEl = document.getElementById('ai-briefing-list');
-            const analysisEl = document.getElementById('ai-analysis-text');
+        function generateDynamicScenario(ideatxt) {
+            let shortName = ideatxt.split('(')[0] || ideatxt;
+            return {
+                title: ideatxt.trim(),
+                cost: "3,500원", targetPr: "6,980원", margin: "50%",
+                c1: "오뚜기 " + shortName, p1: "7,500원", c2: "풀무원 " + shortName, p2: "8,000원",
+                cogsList: [ {n:"핵심 주원료(최상급)", v:"1,500원"}, {n:"특수 부재료 밑소스", v:"700원"}, {n:"고급 패키징 포장", v:"300원"}, {n:"공정 인건/물류비", v:"1000원"}],
+                strat_txt: `[${shortName}] 시장을 타겟으로 원가 절감 및 프리미엄 브랜딩을 동시 적용하여, 타사 대비 압도적 품질과 가성비를 동시에 제공합니다. 초기부터 매대 1위를 점수할 공격적 박리다매가 가능합니다.`,
+                risk_txt: `해당 카테고리 고유의 유통기한 및 보관 리스크를 방어하기 위해 최신 설비와 포장 기법(MAP 등)을 전격 동원하여 클레임 품질 변동성을 제로화했습니다.`,
+                db: {
+                    mkt: `[제품 전략]\n- ${shortName} 맞춤형 프리미엄 타겟.\n- 1~2인 가구 최적화 및 프리미엄 매대 진열.`,
+                    pur: `[원가 시세]\n- 필수 원료 글로벌 소싱으로 단가 15% 방어.\n- 장기계약을 통한 매입 변동성 극복.`,
+                    rnd: `[BOM 솔루션]\n- 최상급 식감과 맛을 견인하는 황금비율 BOM 확정.\n- 자체 개발 숙성 기법 적용.`,
+                    prod: `[생산 CAPA]\n- 기존 라인 부분 개조를 통한 병목현상 우회 회피.\n- 양산 자동화 100% 테스트 돌입.`,
+                    qa: `[식약/HACCP]\n- 이물질 완벽 차단 및 HACCP 절대 준수 공정.\n- 심부 온도 모니터링 가이드라인 수립.`,
+                    des: `[디자인 기준]\n- 제품의 속성이 직관적으로 드러나는 특수 배리어 재질 패키지.\n- 브랜드 아이덴티티 전면 각인.`
+                },
+                images: [
+                    'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&w=800',
+                    'https://images.unsplash.com/photo-1498837167922-41c46b66432b?auto=format&w=800',
+                    'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&w=800'
+                ],
+                processPhotos: [
+                    { u: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&w=800', c: 'STEP 1: 자동화 원료 전처리 스마트 공정' },
+                    { u: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&w=800', c: 'STEP 2: 무균 패키징 씰링 및 X-Ray 검출 라인' }
+                ],
+                procSteps: [
+                    { n: "원료 입고", e: "위생 검수 창고", c: false },
+                    { n: "전처리 배합", e: "산업용 고속 배합기", c: false },
+                    { n: "본 가열/가공", e: "연속식 스마트 가공장비", c: true },
+                    { n: "급속 냉/해동", e: "컨베이어 터널 쿨러", c: false },
+                    { n: "금속/이물검출", e: "X-Ray 투시 선별기", c: true },
+                    { n: "포장/출하", e: "자동화 로터리 씰러", c: false }
+                ]
+            };
+        }
+
+        function calcDates(dStr) {
+            const d0 = new Date(dStr);
+            const fmt = d => `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+            const dd = (D, offset) => { const n = new Date(D); n.setDate(n.getDate() - offset); return fmt(n); };
+            return { d0:fmt(d0), d14:dd(d0,14), d30:dd(d0,30), d45:dd(d0,45) };
+        }
+
+        function buildProcessFlowHTML(steps) {
+            let parts = [];
+            steps.forEach((step, idx) => {
+                let cls = step.c ? 'p-step ccp' : 'p-step';
+                let badge = step.c ? `<div style="color:#DC2626; font-size:11px; font-weight:900; margin-bottom:4px;">[CCP 한계공정]</div>` : '';
+                parts.push(`
+                    <div class="${cls}">
+                        ${badge}
+                        <h4>${step.n}</h4>
+                        <div class="equip-tag">설비: ${step.e}</div>
+                    </div>
+                `);
+                if(idx < steps.length - 1) parts.push(`<div class="p-arrow">➔</div>`);
+            });
+            return `<div class="process-container">${parts.join('')}</div>`;
+        }
+
+        let currentScenarioData = null;
+        let currentDates = null;
+
+        function startDynamicSimulation() {
+            document.getElementById('relay-feed').innerHTML = '';
+            document.getElementById('ppt-container').innerHTML = '<div class="ppt-empty-state">진행 중... 완료 시 자동 PPT 렌더링 시작.</div>';
             
-            listEl.innerHTML = '';
-            dataObj.list.forEach((item, index) => {
-                const li = document.createElement('li');
-                li.className = 'fade-in';
-                li.style.animationDelay = `${index * 0.05}s`;
-                li.innerHTML = `<a href="${item.link}" target="_blank">${item.text}</a>`;
-                listEl.appendChild(li);
+            let idea = document.getElementById('val-idea').value;
+            let type = getTimelineType(idea);
+            let sc = type === 'dynamic' ? generateDynamicScenario(idea) : DB_SCENARIOS[type];
+            currentScenarioData = sc;
+
+            const lBox = document.getElementById('loading-box');
+            lBox.style.display = 'block';
+            let l1 = document.getElementById('load-1'); let l2 = document.getElementById('load-2'); let l3 = document.getElementById('load-3');
+            l1.className = 'load-line'; l2.className = 'load-line'; l3.className = 'load-line';
+            l1.innerText = "✍️ 기획 초안 확립 및 시뮬레이터 포석 준비 중...";
+            setTimeout(() => { l1.classList.add('visible'); }, 200);
+            
+            setTimeout(() => {
+                l2.innerText = `⚙️ [1번 탭] 영역의 6개 전사 조직 체계가 (${sc.title}) 전용 DB로 재편성 되었습니다.`;
+                l2.classList.add('visible');
+                
+                document.getElementById('db-val-mkt').value = sc.db.mkt;
+                document.getElementById('db-val-pur').value = sc.db.pur;
+                document.getElementById('db-val-rnd').value = sc.db.rnd;
+                document.getElementById('db-val-prod').value = sc.db.prod;
+                document.getElementById('db-val-qa').value = sc.db.qa;
+                document.getElementById('db-val-des').value = sc.db.des;
+                document.querySelectorAll('.input-box').forEach(el => {
+                    el.classList.remove('focus-flash'); void el.offsetWidth; el.classList.add('focus-flash');
+                });
+            }, 1200);
+
+            setTimeout(() => { l3.innerText = "🌐 팀별 협의 시퀀스 및 화개(Graphic) 렌더링 서버 트랜잭션 전개 중..."; l3.classList.add('visible'); }, 2400);
+
+            setTimeout(() => {
+                lBox.style.display = 'none';
+                if(type === 'gubarou') renderGubarouFeed(sc);
+                else if(type === 'spicy_pork') renderSpicyPorkFeed(sc);
+                else if(type === 'samgyetang') renderSamgyetangFeed(sc);
+                else renderDynamicFeed(sc); // Any custom product
+            }, 3600);
+        }
+
+        function renderDynamicFeed(sc) {
+            let shortName = sc.title.split('(')[0];
+            const mkt_t = sc.db.mkt.replace(/\n/g,'<br>');
+            const pur_t = sc.db.pur.replace(/\n/g,'<br>');
+            const rnd_t = sc.db.rnd.replace(/\n/g,'<br>');
+            const prod_t = sc.db.prod.replace(/\n/g,'<br>');
+            const qa_t = sc.db.qa.replace(/\n/g,'<br>');
+            
+            const seqHTML = `
+                <div class="accordion-head open" onclick="toggleAccordion(this)"><span>⚙️ [0] 부서별 협의 논리 구조 (Sequence Diagram)</span><span class="accordion-icon">−</span></div>
+                <div class="accordion-body" style="display:block;">
+                    <div class="mermaid" style="text-align:center;">
+                        sequenceDiagram
+                            participant M as 기획마케팅
+                            participant P as 매입팀
+                            participant C as 생산공무
+                            participant Q as 품질QA팀
+                            M->>P: ${shortName} 시장 선점 타겟팅 원료 매입 지시
+                            P->>C: B2B/B2C 맞춤 원가 방어를 위한 대체재 조달 완료
+                            C->>Q: 수동공정 최소화 및 라인 병목 멸균 규제 리뷰 의뢰
+                            Q-->>C: 위해요소 중점관리(CCP) 구간 지정 및 리스크 헷징 수단 통보
+                            C-->>M: 공정 타당성 회피 입증 완료. 즉각 시생산 착수 승인
+                    </div>
+                </div>
+            `;
+            const t1 = `<div class="accordion-head open" onclick="toggleAccordion(this)"><span>🎯 [1] 마케팅부: 포지셔닝 지시</span><span class="accordion-icon">−</span></div><div class="accordion-body" style="display:block;"><p>${mkt_t}</p></div>`;
+            const t2 = `<div class="accordion-head" onclick="toggleAccordion(this)"><span>🛒 [2] 매입/R&D 합동안: 원료 단가 방어 및 BOM 제안</span><span class="accordion-icon">+</span></div><div class="accordion-body"><p><b>[매입팀 통찰]</b><br>${pur_t}<br><br><b>[R&D 연구소 조치]</b><br>${rnd_t}</p></div>`;
+            const t3 = `<div class="accordion-head" onclick="toggleAccordion(this)"><span>🏭 [3] 스마트 생산 및 품질(QA) 승인</span><span class="accordion-icon">+</span></div><div class="accordion-body"><p><b>[생산 라인 세팅 및 CAPA]</b><br>${prod_t}<br><br><b>[QA 품질 검증 및 한계 리스크 극복]</b><br>${qa_t}</p></div>`;
+            
+            const finance = `
+                <div class="accordion-head open" onclick="toggleAccordion(this)" style="background:#FFF8E1; border:2px solid #F59E0B;"><span>📊 [4] 재무운영팀: 재무 원가(COGS) 및 단가 플랜</span><span class="accordion-icon">−</span></div>
+                <div class="accordion-body" style="display:block;">
+                    <p style="font-weight:800; color:#B45309;">${shortName} 제품군의 최적 원가 도출이 완료되었습니다.</p>
+                    <table class="table-custom">
+                        <tr><th>원가 산출 항목</th><th>비용 (KRW)</th></tr>
+                        <tr><td>${sc.cogsList[0].n}</td><td>${sc.cogsList[0].v}</td></tr>
+                        <tr><td>${sc.cogsList[1].n}</td><td>${sc.cogsList[1].v}</td></tr>
+                        <tr><td>${sc.cogsList[2].n} + ${sc.cogsList[3].n}</td><td>${sc.cogsList[2].v} + ${sc.cogsList[3].v}</td></tr>
+                        <tr style="background:#FEF3C7; font-weight:900;"><td>총 조립 단위 원가 (COGS)</td><td>${sc.cost} / Pack</td></tr>
+                    </table>
+                    <h4 style="margin-bottom:8px; margin-top:20px;">⚔️ 경쟁사 판매가 비교 시뮬레이션</h4>
+                    <table class="table-custom" style="border:1px solid #111;">
+                        <tr style="background:#111; color:#fff;"><th>브랜드</th><th>소비자 판매가</th></tr>
+                        <tr><td>${sc.c1}</td><td>${sc.p1}</td></tr>
+                        <tr><td>${sc.c2}</td><td>${sc.p2}</td></tr>
+                        <tr style="background:#FFF3E0; color:#E3000F;"><td><b>당사 타겟가 (마진 ${sc.margin})</b></td><td><b><span style="font-size:20px;">${sc.targetPr}</span></b></td></tr>
+                    </table>
+                </div>
+            `;
+            finalizeSimulation(seqHTML, t1, t2, t3, "", "", finance, sc);
+        }
+
+        function renderSamgyetangFeed(sc) {
+            const seqHTML = `
+                <div class="accordion-head open" onclick="toggleAccordion(this)"><span>⚙️ [0] 부서별 협의 논리 구조 (Sequence Diagram)</span><span class="accordion-icon">−</span></div>
+                <div class="accordion-body" style="display:block;">
+                    <div class="mermaid" style="text-align:center;">
+                        sequenceDiagram
+                            participant M as 기획마케팅본부
+                            participant P as 매입팀
+                            participant R as R&D센터
+                            participant C as 공무생산팀
+                            participant Q as 품질QA팀
+                            M->>P: 피코크 프리미엄에 맞는 최고급 원육 매입 의뢰
+                            P->>R: 브라질산 배제, 국내산 냉장 생육(5,800원) 전량 송부
+                            R->>C: 통뼈를 제외한 순살 500g 충전 양산 라인 가이드 배포
+                            C->>Q: 레토르트 500g 노즐 부하 및 충전 안정성 검토의뢰
+                            Q-->>C: 121도 F값 4.0 이상 멸균 달성 조건부 승인
+                    </div>
+                </div>
+            `;
+            const t1 = `<div class="accordion-head open" onclick="toggleAccordion(this)"><span>🎯 [1] 마케팅부: 전략 및 타겟 지시</span><span class="accordion-icon">−</span></div><div class="accordion-body" style="display:block;"><p>이마트 "피코크 프리미엄" 타겟입니다. 1~2인 가구가 조리하기 귀찮아하는 보양식을 완벽한 하이엔드 레스토랑 수준으로 끌어올립니다. 저가 시장 대신 철저하게 프리미엄으로 승부합니다.</p></div>`;
+            const t2 = `<div class="accordion-head" onclick="toggleAccordion(this)"><span>🛒 [2] 매입팀: 원료 거래처 선정 및 단가 갈등 극복</span><span class="accordion-icon">+</span></div><div class="accordion-body"><p>브라질 냉동육 사용 시 원가절감이 가능(3,400원/kg) 합니다. 그러나 마케팅부의 '피코크' 프리미엄 포지셔닝 DB를 열람한 결과, 잡내 클레임 등 가장 큰 리스크를 원천 제거하기 위해 <b>[원가가 비싸더라도 국내산 100% 닭다리구이 생육(5,800원) 전량 매입 풀 체제]</b>를 전략적으로 결정합니다.</p></div>`;
+            const t3 = `<div class="accordion-head" onclick="toggleAccordion(this)"><span>🧪 [3] R&D연구소: 레시피 배합비(BOM) 제안</span><span class="accordion-icon">+</span></div><div class="accordion-body"><p>뼈 부피를 버리고 먹기 편한 '순살 500g' 제안.</p><table class="table-custom"><tr><th>원재료 원물</th><th>안정 배합비(BOM)</th></tr><tr><td>국내산 통다리/가슴 생육</td><td>60.0%</td></tr><tr><td>치킨스톡농축액(Brix 15)</td><td>33.5%</td></tr><tr><td>수조 수삼 및 통대추</td><td>6.5%</td></tr></table></div>`;
+            const t4 = `<div class="accordion-head" onclick="toggleAccordion(this)"><span>🏭 [4] 생산/공무본부: 공장 라인 기계 설비 타협</span><span class="accordion-icon">+</span></div><div class="accordion-body"><p>기획팀의 원래 600g 의견대로 했다면 충전 노즐 파이프 확장공사(2,500만원 / 4주 제원 소모)가 발생했으나, R&D 측이 타협해 준 <b>[순살 500g]</b> 전략을 즉각 수용해 기존 음성 3라인을 공사비용 없이 즉각 풀가동시킬 수 있습니다. Capa 일 12,000봉 확정.</p></div>`;
+            const t5 = `<div class="accordion-head" onclick="toggleAccordion(this)"><span>🛡️ [5] 품질(QA)팀 인증서 및 🎨 [6] 디자인 패키징</span><span class="accordion-icon">+</span></div><div class="accordion-body"><p><b>QA팀:</b> 식약처 준수 조건. 레토르트 내 심부온도 121도 도달 시점에서 최소 15분 유지하여 <span style="background:#FFCDD2; font-weight:800; padding:2px 6px;">[F값 4.0 이상 절대 보장]</span> 지침 하달. 잔골 Xray 집중 통과 배치.<br><b>디자인팀:</b> 윤고딕 폰트 적용 및 120도 열수압력을 이겨내는 4중 합지 PP 블랙 무광 파우치 발주 완료.</p></div>`;
+
+            const finance = `
+                <div class="accordion-head open" onclick="toggleAccordion(this)" style="background:#FFF8E1; border:2px solid #F59E0B;"><span>📊 [7] 재무운영팀: 재무 원가(COGS) 및 단가 압살 플랜</span><span class="accordion-icon">−</span></div>
+                <div class="accordion-body" style="display:block;">
+                    <p style="font-weight:800; color:#B45309;">최고급 프리미엄 원육을 쓰고도 시장 점유율 1위를 가격으로 짓밟을 수 있는 시뮬레이션 산출 완료.</p>
+                    <table class="table-custom">
+                        <tr><th>원가 산출 항목</th><th>비용 (KRW)</th></tr>
+                        <tr><td>${sc.cogsList[0].n}</td><td>${sc.cogsList[0].v}</td></tr>
+                        <tr><td>${sc.cogsList[1].n}</td><td>${sc.cogsList[1].v}</td></tr>
+                        <tr><td>${sc.cogsList[2].n} + ${sc.cogsList[3].n}</td><td>${sc.cogsList[2].v} + ${sc.cogsList[3].v}</td></tr>
+                        <tr style="background:#FEF3C7; font-weight:900;"><td>총 조립 단위 원가 (COGS)</td><td>${sc.cost} / Pack</td></tr>
+                    </table>
+                    <h4 style="margin-bottom:8px; margin-top:20px;">⚔️ 1,2위 경쟁사 판매가 비교 및 압살 플랜</h4>
+                    <table class="table-custom" style="border:1px solid #111;">
+                        <tr style="background:#111; color:#fff;"><th>경쟁 브랜드</th><th>시중 소비자 판매가</th></tr>
+                        <tr><td>${sc.c1}</td><td>${sc.p1}</td></tr>
+                        <tr><td>${sc.c2}</td><td>${sc.p2}</td></tr>
+                        <tr style="background:#FFF3E0; color:#E3000F;"><td><b>당사 타겟가 (마진 ${sc.margin} 확보)</b></td><td><b><span style="font-size:20px;">${sc.targetPr}</span></b></td></tr>
+                    </table>
+                    <p style="font-size:14px; margin-top:16px;"><b>결론 통찰:</b> ${sc.strat_txt}</p>
+                </div>
+            `;
+            finalizeSimulation(seqHTML, t1,t2,t3,t4,t5, finance, sc);
+        }
+
+        function renderGubarouFeed(sc) {
+            const seqHTML = `
+                <div class="accordion-head open" onclick="toggleAccordion(this)"><span>⚙️ [0] 부서별 협의 논리 구조 (Sequence Diagram)</span><span class="accordion-icon">−</span></div>
+                <div class="accordion-body" style="display:block;">
+                    <div class="mermaid" style="text-align:center;">
+                        sequenceDiagram
+                            participant M as 기획마케팅본부
+                            participant P as 매입재무팀
+                            participant C as 생산공무팀
+                            participant Q as 품질QA팀
+                            M->>P: 노브랜드 초가성비 컨셉 매입 오더
+                            P->>C: 장기계약 잉여 한돈 물량(10톤) 소진 위한 대량 튀김 통보
+                            C->>Q: 튀김기 과부하로 인한 불량 및 산가(Acid) 한계 문의
+                            Q-->>C: 산가 2.5 오버 시 전량 폐기 경고
+                            C-->>M: 전략 수정. 완전 튀김 대신 1분 부분 초벌 + 액체질소 완전냉동(IQF)으로 선회 타협
+                    </div>
+                </div>
+            `;
+            const t1 = `<div class="accordion-head open" onclick="toggleAccordion(this)"><span>🎯 [1] 마케팅부: 타겟 및 유통 방식 지시</span><span class="accordion-icon">−</span></div><div class="accordion-body" style="display:block;"><p>에어프라이어 가정의 1인 야식 안주 수요를 겨냥합니다. 고급화보단 옐로우 컬러 기반의 '노브랜드' 브랜딩으로 미끼 상품 급 초저가 박리다매 전략을 설계합니다.</p></div>`;
+            const t2 = `<div class="accordion-head" onclick="toggleAccordion(this)"><span>🛒 [2] 매입팀: 잉여 원재료 재고 시너지 소집</span><span class="accordion-icon">+</span></div><div class="accordion-body"><p>완제품 직수입이 싸지만(3,800원), 마침 당사 RMD 부서에 한돈협회와 체결한 <b>장기계약 등심 잔여 고기 물량 10톤(6,500원)이 매몰비용으로 쌓여있습니다.</b> 이 잉여 원물을 대거 폭격 투입하여 사실상 엄청난 재무적 소진 효과를 얻어 냅니다.</p></div>`;
+            const t3 = `<div class="accordion-head" onclick="toggleAccordion(this)"><span>🧪 [3] R&D연구소: 에프용 바삭 튀김옷 BOM 제안</span><span class="accordion-icon">+</span></div><div class="accordion-body"><p>에어프라이어 가정에서 조리 시 기름이 나오며 타는 식감을 살리도록, 공정에서 미리 식용유 코팅 10% 이상 보유를 의무화합니다. 반죽은 찹쌀6:전분4.</p></div>`;
+            const t4 = `<div class="accordion-head" onclick="toggleAccordion(this)"><span>🏭 [4] 생산팀 및 🛡️ [5] 품질/디자인 연합협의</span><span class="accordion-icon">+</span></div><div class="accordion-body"><p><b>생산 및 QA 위기 타협:</b> 이천공단 1라인에서 돼지고기를 풀스케일로 튀기면 기름 부패(산가)가 급증하여 QA 한계선(Acid 2.5)을 뚫게 됩니다. 4시간마다 기름을 버려야 하므로 공장이 도저히 멈춰서 돌 수가 없습니다.<br><br><b>💡 획기적인 회피 설계 (Hedge): </b>170도 튀김기에 고기를 1분만 넣고 재빨리 꺼내 겉면만 식용유로 '시어링(초벌)' 시킨 뒤 바로 <span style="background:#DBEAFE; font-weight:800; padding:2px 6px;">[터널식 급속냉동고(IQF)로 직행]</span>시킵니다. 공장 기름 오염을 10분의 1로 줄이면서 물량은 10배 늘리는 기적의 공정 타협 달성!<br><b>디자인팀: </b>내부 튀김 색이 보이는 노브랜드 PE 지퍼백 발주 완료.</p></div>`;
+            const t5 = ``;
+
+            const finance = `
+                <div class="accordion-head open" onclick="toggleAccordion(this)" style="background:#FFF8E1; border:2px solid #F59E0B;"><span>📊 [6] 재무운영팀: 재무 원가(COGS) 및 단가 압살 플랜</span><span class="accordion-icon">−</span></div>
+                <div class="accordion-body" style="display:block;">
+                    <p style="font-weight:800; color:#B45309;">초벌 급속냉동 설계 + 잉여 원료 소진을 이용한 치명적인 초가성비 달성.</p>
+                    <table class="table-custom">
+                        <tr><th>원가 산출 항목</th><th>비용 (KRW)</th></tr>
+                        <tr><td>${sc.cogsList[0].n}</td><td>${sc.cogsList[0].v}</td></tr>
+                        <tr><td>${sc.cogsList[1].n}</td><td>${sc.cogsList[1].v}</td></tr>
+                        <tr><td>${sc.cogsList[2].n} + ${sc.cogsList[3].n}</td><td>${sc.cogsList[2].v} + ${sc.cogsList[3].v}</td></tr>
+                        <tr style="background:#FEF3C7; font-weight:900;"><td>총 조립 단위 원가 (COGS)</td><td>${sc.cost} / Pack</td></tr>
+                    </table>
+                    <h4 style="margin-bottom:8px; margin-top:20px;">⚔️ 1,2위 경쟁사 판매가 비교 및 무적의 덤핑 전략</h4>
+                    <table class="table-custom" style="border:1px solid #111;">
+                        <tr style="background:#111; color:#fff;"><th>경쟁 브랜드</th><th>소비자 판매가</th></tr>
+                        <tr><td>${sc.c1}</td><td>${sc.p1}</td></tr>
+                        <tr><td>${sc.c2}</td><td>${sc.p2}</td></tr>
+                        <tr style="background:#FFF3E0; color:#E3000F;"><td><b>당사 타겟가 (마진 ${sc.margin})</b></td><td><b><span style="font-size:20px;">${sc.targetPr}</span></b></td></tr>
+                    </table>
+                    <p style="font-size:14px; margin-top:16px;"><b>결론 통찰:</b> ${sc.strat_txt}</p>
+                </div>
+            `;
+            finalizeSimulation(seqHTML, t1,t2,t3,t4,t5, finance, sc);
+        }
+
+        function renderSpicyPorkFeed(sc) {
+            const seqHTML = `
+                <div class="accordion-head open" onclick="toggleAccordion(this)"><span>⚙️ [0] 부서별 협의 논리 구조 (Sequence Diagram)</span><span class="accordion-icon">−</span></div>
+                <div class="accordion-body" style="display:block;">
+                    <div class="mermaid" style="text-align:center;">
+                        sequenceDiagram
+                            participant M as 기획마케팅본부
+                            participant P as 매입재무팀
+                            participant C as 생산공무팀
+                            participant Q as 품질QA팀
+                            M->>P: 1~2인 가구 저녁반찬 타겟 프리미엄 냉장육 개발 지시
+                            P->>C: 원가 방어를 위해 100% 수입육 대신 한돈 후지 혼합 제안 통보
+                            C->>Q: 비가열 살균 방식이므로 유통기한 7일 미만 한계 지적 (반품 파기수율 경고)
+                            Q-->>C: 일반 팩 진공 포장 대신 산소유입을 차단하는 MAP가스치환포장으로 선회 시 14일 연장 보장
+                            C-->>M: 포장 원가 상승 수용 조건부로, 반품 리스크 헷징 및 생산 승인 타결
+                    </div>
+                </div>
+            `;
+            const t1 = `<div class="accordion-head open" onclick="toggleAccordion(this)"><span>🎯 [1] 마케팅부: 전략 및 매대 포지셔닝 지시</span><span class="accordion-icon">−</span></div><div class="accordion-body" style="display:block;"><p>냉장육 반찬 수요를 겨냥합니다. 싸구려 제육볶음 느낌을 완전히 지우고 <b>[피코크 프라이빗 라벨]</b> 네이밍을 덧씌워 고급화합니다. 이마트 축산 코너 냉장 매대 중앙에 듀얼 진열하여 시각적 투명도로 신선함을 공격적으로 어필합니다.</p></div>`;
+            const t2 = `<div class="accordion-head" onclick="toggleAccordion(this)"><span>🛒 [2] 매입팀: 한돈 후지 혼합을 통한 원가 방어</span><span class="accordion-icon">+</span></div><div class="accordion-body"><p>미국/스페인산 냉동육(4,200원)을 쓰면 마진은 좋으나 '피코크' 브랜드 품질 기준에 미달합니다. 따라서 <b>[국내산 한돈 후지/뒷다리살(4,500원)]</b>을 전격 매입하여, 정밀 가공으로 뻑뻑함을 제거한 뒤 한돈 마크를 당당하게 부착하는 기적의 고급화 매입 트리를 탔습니다.</p></div>`;
+            const t3 = `<div class="accordion-head" onclick="toggleAccordion(this)"><span>🧪 [3] R&D연구소: 72시간 0도 저온 진공 숙성</span><span class="accordion-icon">+</span></div><div class="accordion-body"><p>상대적으로 저렴한 한돈 후지 부위의 질긴 식감을 파괴하기 위해, R&D 측에서 고추장 비법 양념과 함께 대형 진공 텀블러에서 <b>[72시간 0도 저온 숙성]</b> 공법을 돌릴 것을 지시합니다. 극히 부드러운 육질이 확보됩니다.</p></div>`;
+            const t4 = `<div class="accordion-head" onclick="toggleAccordion(this)"><span>🏭 [4] 생산팀 및 🛡️ [5] 품질/디자인 연합협의</span><span class="accordion-icon">+</span></div><div class="accordion-body"><p><b>생산 및 QA 최대 치명적 위기 발생: </b>가열되지 않은 냉장 생육이기 때문에 포장 후 미생물 증식 우려로 일반 진공 필름 포장 시 유통기한이 겨우 <b>[7일]</b> 나옵니다. 이대로면 전국 이마트 물류를 돌리기도 전에 재고 파기 반품이 속출합니다.<br><br><b>💡 획기적인 회피 타협 설계 (MAP 도입): </b>포장 단가가 조금 오르더라도 용기 내부 공기를 싹 밀어내고 불활성 질소/이산화탄소 가스로 내부를 채우는 <span style="background:#DBEAFE; font-weight:800; padding:2px 6px;">[유럽형 MAP(가스치환) 충전 포장 기술]</span>을 전격 단행했습니다! 씰링과 동시에 부패를 원천 단절시켜 유통기한을 14일 이상으로 연장하며 반품 리스크를 제로로 봉쇄했습니다.<br><b>디자인팀: </b>투명 하이배리어 용기 위에 피코크 전용 블랙/골드 띠지 슬리브 발주.</p></div>`;
+            const t5 = ``;
+
+            const finance = `
+                <div class="accordion-head open" onclick="toggleAccordion(this)" style="background:#FFF8E1; border:2px solid #F59E0B;"><span>📊 [6] 재무운영팀: 재무 원가(COGS) 및 단가 압살 플랜</span><span class="accordion-icon">−</span></div>
+                <div class="accordion-body" style="display:block;">
+                    <p style="font-weight:800; color:#B45309;">고가의 MAP 설비 포장비용 추가를 감수하더라도 최적의 한돈 혼합방어를 통해 63% 마진 수성 완료.</p>
+                    <table class="table-custom">
+                        <tr><th>원가 산출 항목</th><th>비용 (KRW)</th></tr>
+                        <tr><td>${sc.cogsList[0].n}</td><td>${sc.cogsList[0].v}</td></tr>
+                        <tr><td>${sc.cogsList[1].n}</td><td>${sc.cogsList[1].v}</td></tr>
+                        <tr><td>${sc.cogsList[2].n} + ${sc.cogsList[3].n}</td><td>${sc.cogsList[2].v} + ${sc.cogsList[3].v}</td></tr>
+                        <tr style="background:#FEF3C7; font-weight:900;"><td>총 조립 단위 제조원가 (COGS)</td><td>${sc.cost} / Pack</td></tr>
+                    </table>
+                    <h4 style="margin-bottom:8px; margin-top:20px;">⚔️ 1,2위 경쟁사 판매가 비교 및 무적의 시장 침투</h4>
+                    <table class="table-custom" style="border:1px solid #111;">
+                        <tr style="background:#111; color:#fff;"><th>경쟁 브랜드</th><th>소비자 판매가</th></tr>
+                        <tr><td>${sc.c1}</td><td>${sc.p1}</td></tr>
+                        <tr><td>${sc.c2}</td><td>${sc.p2}</td></tr>
+                        <tr style="background:#FFF3E0; color:#E3000F;"><td><b>당사 타겟가 (마진 ${sc.margin})</b></td><td><b><span style="font-size:20px;">${sc.targetPr}</span></b></td></tr>
+                    </table>
+                    <p style="font-size:14px; margin-top:16px;"><b>결론 통찰:</b> ${sc.strat_txt}</p>
+                </div>
+            `;
+            finalizeSimulation(seqHTML, t1,t2,t3,t4,t5, finance, sc);
+        }
+
+        function finalizeSimulation(seqH, t1, t2, t3, t4, t5, finance, sc) {
+            
+            const teamLeaderHTML = `
+                <div class="accordion-head open" onclick="toggleAccordion(this)" style="background:#EFF6FF; border: 2px solid #3B82F6; box-shadow: 0 4px 10px rgba(59,130,246,0.2);">
+                    <span>🗣️ [AI 기획 팀장] 부서별 실행 착수 지시서 (Action Items)</span>
+                    <span class="accordion-icon">−</span>
+                </div>
+                <div class="accordion-body" style="display:block; padding-top:20px;">
+                    <p style="font-weight:800; font-size:16px; color:#1E3A8A; margin-top:0;">모든 타협과 타당성 검증이 회피 설계와 함께 승인되었습니다. 내일 09시 출근 즉시 하단 지시를 수행하십시오.</p>
+                    <ul style="line-height:2.0; font-size:15px; color:#333;">
+                        <li><b>[마케팅부]:</b> 이마트/SSG MD와 내일 결선 미팅. 파격적인 소비자가 기반으로 전 지역 프리미엄 매대 엔드캡 독점 보장 확보해 올 것.</li>
+                        <li><b>[R&D 및 QA]:</b> 합의된 시방서로 즉각 타격. 다음 주 수요일까지 임원용 파일럿 200 Pick 샘플 조리 보고.</li>
+                        <li><b>[생산본부 및 공무팀]:</b> 주말까지 라인 세팅. 공운전(Empty Run) 테스트를 최소 3회 돌려 누수율(불량) 제로화 세팅할 것.</li>
+                    </ul>
+                </div>
+            `;
+
+            const procFlowHTML = buildProcessFlowHTML(sc.procSteps);
+            let photosHTML = sc.processPhotos.map((p, i) => `
+                <div style="flex:1; background:#000; padding:12px; border-radius:12px; border:2px solid #333; box-shadow: 0 8px 24px rgba(0,0,0,0.2);">
+                    <div style="aspect-ratio:4/3; background-image:url('${p.u}'); background-size:cover; background-position:center; border-radius:6px; margin-bottom:12px;"></div>
+                    <div style="color:#FFF; font-size:14px; font-weight:800; text-align:center;">${p.c}</div>
+                </div>
+                ${i < sc.processPhotos.length -1 ? '<div style="display:flex; align-items:center; justify-content:center; color:#ccc; font-size:32px; font-weight:900;">➔</div>' : ''}
+            `).join('');
+
+            const layoutPhotoHTML = `
+                <div class="accordion-head open" onclick="toggleAccordion(this)"><span>🏗️ [AI 공장/품질] 제조공정도 및 HACCP 평면도, 현장 화상</span><span class="accordion-icon">−</span></div>
+                <div class="accordion-body" style="display:block; padding-top:0;">
+                    <h3 style="margin-top:30px; font-size:16px; border-bottom:2px solid #E3000F; display:inline-block; padding-bottom:4px;">1. AI 산출 맞춤형 제조공정도 (Process Flow) 및 설비 제원</h3>
+                    ${procFlowHTML}
+                    
+                    <div style="margin-top:20px; display:flex; gap:16px; align-items:stretch;">
+                        ${photosHTML}
+                    </div>
+
+                    <h3 style="margin-top:50px; font-size:16px; border-bottom:2px solid #E3000F; display:inline-block; padding-bottom:4px;">2. 전 생산팀 HACCP 인력/설비 배치 평면도</h3>
+                    <div class="haccp-factory-board">
+                        <div class="factory-legend"><span class="legend-item"><span class="box dirty"></span>일반구역</span><span class="legend-item"><span class="box buffer"></span>위생전실</span><span class="legend-item"><span class="box clean"></span>청결구역 / CCP</span></div>
+                        <div class="factory-floor">
+                            <div class="factory-col">
+                                <div class="room dirty-room"><div class="room-title">원부자재 해동/검수장</div><div class="equip">현장 장비: 전동 호이스트, 대형 수조</div><div class="manpower">👨‍🔧 검역/이송요원 2명</div></div><div class="flow-arrow-right">→</div>
+                            </div>
+                            <div class="factory-col">
+                                <div class="buffer-room">위생 전실 및 에어샤워 대기존</div>
+                                <div class="room clean-room" style="flex:1;"><div class="room-title">전처리 가열 및 조립 설비존</div><div class="equip">현장 장비: 진공텀블러, 슬라이서</div><div class="manpower">👩‍🍳 위생 오퍼레이터 2명</div></div>
+                            </div>
+                            <div class="factory-col" style="border-left: 2px dashed #9CA3AF; padding-left:14px;">
+                                <div class="room ccp-room"><div class="room-title" style="color:#B71C1C;">열탕/포장 포집기 (핵심 CCP 구역)</div><div class="equip" style="background:#FFF0F0; border-color:#FCA5A5; font-weight:800;">현장 장비: 금속검출기, 가스포장기</div><div class="manpower" style="background:#FFCDD2; color:#B71C1C;">👨‍🔧 심부모니터링 감독관 1명</div></div>
+                                <div class="door-down">▼ 자동 적재 컨베이어</div>
+                                <div class="room dirty-room"><div class="room-title">최종 출하 / 파렛트 래핑장</div><div class="equip">현장 장비: 지게차, 오토 스트래퍼</div><div class="manpower">👨‍🔧 지게차요원 3명</div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let dDate = document.getElementById('target-date').value;
+            currentDates = calcDates(dDate);
+
+            const scheduleHTML = `
+                <div class="accordion-head open" onclick="toggleAccordion(this)" style="background:#EBF5FF;"><span>⏰ [일정] 제품 출시 산출 마일스톤 (Milestone Tracker)</span><span class="accordion-icon">−</span></div>
+                <div class="accordion-body" style="display:block; padding-top:0;">
+                    <div class="milestone-track">
+                        <div class="m-point done"><div class="m-dot"></div><div class="m-title">R&D 모델 확립</div><div class="m-date">D-45 (${currentDates.d45})</div></div>
+                        <div class="m-point done"><div class="m-dot"></div><div class="m-title">공장 라인 튜닝 완비</div><div class="m-date">D-30 (${currentDates.d30})</div></div>
+                        <div class="m-point done"><div class="m-dot"></div><div class="m-title">티저 마케팅 및 물류 입고</div><div class="m-date">D-14 (${currentDates.d14})</div></div>
+                        <div class="m-point final"><div class="m-dot" style="font-size:10px; line-height:20px; color:#fff; text-align:center;">🚩</div><div class="m-title">전국 유통망 런칭</div><div class="m-date" style="color:#E3000F; font-weight:900;">D-Day (${currentDates.d0})</div></div>
+                    </div>
+                </div>
+            `;
+
+            const promoHTML = `
+                <div class="accordion-head open" onclick="toggleAccordion(this)" style="background:#E3000F; color:#fff;"><span>🎬 [미디어 퍼포먼스] 커머셜 티저 비디오 (15초 Loop 동적영상 자동생성)</span><span class="accordion-icon" style="background:#fff; color:#E3000F;">−</span></div>
+                <div class="accordion-body" style="display:block; padding-top:0;">
+                    <div class="promo-container">
+                        <div class="promo-badge">AD 🎬 LIVE 15s</div>
+                        <div class="video-layer play-layer-1" style="background-image:url('${sc.images[0]}');"></div>
+                        <div class="video-layer play-layer-2" style="background-image:url('${sc.images[1]}');"></div>
+                        <div class="video-layer play-layer-3" style="background-image:url('${sc.images[2]}'); filter: brightness(0.8);"></div>
+                        <div class="promo-text play-text-1">완벽한 황금 비율의 정석</div>
+                        <div class="promo-text play-text-2">가장 우수한 품질의 증명</div>
+                        <div class="promo-text play-text-3"><div class="promo-sub">기대, 그 이상을 만나보세요.</div>${sc.title}</div>
+                        <div class="promo-bar play-progress"></div>
+                    </div>
+                </div>
+            `;
+
+            const feedSteps = [
+                { class:'team-seq', html:seqH, d:0, isM:true },
+                { class:'team-1', html:t1, d:600 }, { class:'team-2', html:t2, d:1200 },
+                { class:'team-3', html:t3, d:1800 }, { class:'team-4', html:t4, d:2400 },
+                { class:'team-5', html:t5, d:2400 }, { class:'team-finance', html:finance, d:3400 },
+                { class:'team-leader', html:teamLeaderHTML, d:4400 },
+                { class:'team-4', html:layoutPhotoHTML, d:5400 },
+                { class:'team-schedule', html:scheduleHTML, d:6400 },
+                { class:'team-media', html:promoHTML, d:7400 }
+            ];
+
+            feedSteps.forEach((step, idx) => {
+                if(!step.html) return;
+                setTimeout(() => {
+                    const el = document.createElement('div');
+                    el.className = `team-card ${step.class}`;
+                    el.innerHTML = step.html;
+                    document.getElementById('relay-feed').appendChild(el);
+                    
+                    if(step.isM) { try{ mermaid.init(undefined, el.querySelectorAll('.mermaid')); }catch(e){} }
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                }, step.d);
             });
 
-            analysisEl.classList.remove('fade-in');
-            void analysisEl.offsetWidth; // trigger reflow
-            analysisEl.classList.add('fade-in');
-            analysisEl.innerHTML = dataObj.analysis;
+            setTimeout(generatePPT, 8000);
         }
 
-        function refreshData(category, btnElement) {
-            btnElement.classList.remove('spin');
-            void btnElement.offsetWidth;
-            btnElement.classList.add('spin');
+        function generatePPT() {
+            const sc = currentScenarioData;
+            const dates = currentDates;
 
-            let currentIndex = stateTracker[category];
-            let nextIndex = currentIndex === 0 ? 1 : 0;
-            stateTracker[category] = nextIndex;
+            const html = `
+                <!-- Slide 1 -->
+                <div class="ppt-slide">
+                    <div class="ppt-title" style="border:none; margin-top:80px; font-size:48px; text-align:center;">신제품 사업 타당성 검토 결과 보고서</div>
+                    <div class="ppt-subtitle" style="text-align:center; font-size:24px; color:#E3000F; font-weight:900;">기안 프로젝트명: ${sc.title}</div>
+                    <div class="ppt-footer" style="justify-content:center; border:none; margin-top:60px; font-size:18px;">AI 전사 통합 시뮬레이터 생성본</div>
+                </div>
+                
+                <!-- Slide 2 -->
+                <div class="ppt-slide">
+                    <div class="ppt-title">1. 재무 원가(COGS) 및 지배적 가격 경쟁 확보 전략</div>
+                    <div class="ppt-subtitle">이마트 오프라인 생태계 유통망을 살린 덤핑 수준의 강력한 단가 도출 구상안</div>
+                    <div class="ppt-content" style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div style="flex:1; margin-right:20px;">
+                            <ul style="line-height:2.6; font-size:18px;">
+                                <li><b>통합 마스터 총 제조원가:</b> <span style="color:#E3000F; font-size:28px; font-weight:900;">${sc.cost}</span>/Pack</li>
+                                <li><b>초기 당사 타겟 출시가:</b> <span style="font-size:26px; font-weight:900;">${sc.targetPr}</span> (마진율 ${sc.margin} 방어)</li>
+                                <li><b>위협적인 1위 경쟁사:</b> ${sc.c1} (${sc.p1})</li>
+                            </ul>
+                        </div>
+                        <div style="flex:1; background:#F8F9FA; padding:24px; border-radius:12px; border:1px solid #111;">
+                            <b style="color:#E3000F; font-size:18px;">[임원 보고용 AI 종합 통찰 결론]</b><br><br>
+                            <span style="font-size:17px; line-height:1.7;">${sc.strat_txt}</span>
+                        </div>
+                    </div>
+                    <div class="ppt-footer"><span>문서분류: PPT-FIN-001</span><span>신세계푸드 대외비 (Confidential)</span></div>
+                </div>
 
-            renderList(`list-${category}`, feedData[category][nextIndex]);
+                <!-- Slide 3 -->
+                <div class="ppt-slide">
+                    <div class="ppt-title">2. 생산(CAPA) 및 QA 규제 공정 리스크 헷징 검토안</div>
+                    <div class="ppt-subtitle">제조 라인 에러(유통기한/병목) 현상을 최신 공정 타협으로 회피하는 생산성 방어 설계건</div>
+                    <div class="ppt-content">
+                        <div style="display:flex; gap:20px; min-height:200px;">
+                            <div style="flex:1; background:#FEF2F2; padding:24px; border-radius:8px; border-left:6px solid #E3000F;">
+                                <b>⚠️ 원물 및 위생 한계 제한 부작용</b><br><br>
+                                기존 기계나 무리한 보관법의 물리적 한계점 감지. 그대로 무리하게 풀가동 증설/생산 시 클레임 및 대형 반품폐기 위기 발생 예측.
+                            </div>
+                            <div style="flex:1; background:#F0FDF4; padding:24px; border-radius:8px; border-left:6px solid #16A34A;">
+                                <b>✅ AI 타협 우회 설계안 승인 (Hedge Method)</b><br><br>
+                                ${sc.risk_txt} 무리한 예산 낭비 없이 완벽하게 수율 극대화 공정방어 완료.
+                            </div>
+                        </div>
+                        <div style="margin-top:30px; text-align:center;">
+                            <span style="display:inline-block; padding:12px 30px; background:#111; color:#fff; font-weight:800; font-size:18px; border-radius:30px;">식약처 지정기준 온도/시간 HACCP 심사조건 프리패스 승인 통과 판정</span>
+                        </div>
+                    </div>
+                    <div class="ppt-footer"><span>문서분류: PPT-MFG-002</span><span>신세계푸드 대외비 (Confidential)</span></div>
+                </div>
+
+                <!-- Slide 4 -->
+                <div class="ppt-slide">
+                    <div class="ppt-title">3. 제품 정식 런칭 확정 마일스톤 (Launch WBS)</div>
+                    <div class="ppt-subtitle"><span style="color:#E3000F; font-weight:900;">D-Day: ${dates.d0}</span> (출시 당일) 까지의 45일간 부서별 핵심 WBS 타임라인 확정안</div>
+                    <div class="ppt-content" style="padding-top:30px;">
+                        <div class="milestone-track" style="margin-bottom:60px;">
+                            <div class="m-point done"><div class="m-dot"></div><div class="m-title" style="font-size:18px;">R&D 파일럿/평가</div><div class="m-date" style="font-size:16px;">${dates.d45}</div></div>
+                            <div class="m-point done"><div class="m-dot"></div><div class="m-title" style="font-size:18px;">공장 라인 튜닝 완료</div><div class="m-date" style="font-size:16px;">${dates.d30}</div></div>
+                            <div class="m-point done"><div class="m-dot"></div><div class="m-title" style="font-size:18px;">초도물고 유통/마케팅</div><div class="m-date" style="font-size:16px;">${dates.d14}</div></div>
+                            <div class="m-point final"><div class="m-dot" style="font-size:10px; line-height:20px; color:#fff; text-align:center;">🚩</div><div class="m-title" style="font-size:18px;">마트 전 지역 런칭</div><div class="m-date" style="color:#E3000F; font-size:18px; font-weight:900;">${dates.d0}</div></div>
+                        </div>
+                        <div style="text-align:center; background:#F5F5F5; border:1px solid #ddd; padding:20px; border-radius:8px;">
+                            <p style="color:#555; font-size:18px; font-weight:800; margin:0;">상기 마일스톤에 따라 기획 및 매입 부서장은 내일 오전 09시부터 즉각 발주 착수 요망.</p>
+                        </div>
+                    </div>
+                    <div class="ppt-footer"><span>시스템: AI 리뷰룸 5.0 생성 플랫폼</span><span>Product Lifecycle Management</span></div>
+                </div>
+            `;
+            document.getElementById('ppt-container').innerHTML = html;
         }
-
-        function refreshAIBriefing(btnElement) {
-            btnElement.classList.remove('spin');
-            void btnElement.offsetWidth;
-            btnElement.classList.add('spin');
-
-            let currentIndex = stateTracker['ai'];
-            let nextIndex = currentIndex === 0 ? 1 : 0;
-            stateTracker['ai'] = nextIndex;
-
-            renderAIBriefing(aiBriefingData[nextIndex]);
-        }
-
-        // Initialize lists on load
-        window.onload = () => {
-            renderAIBriefing(aiBriefingData[0]);
-            renderList('list-rnd', feedData['rnd'][0]);
-            renderList('list-prod', feedData['prod'][0]);
-            renderList('list-safety', feedData['safety'][0]);
-            renderList('list-plan', feedData['plan'][0]);
-            renderList('list-sales', feedData['sales'][0]);
-            renderList('list-domestic', feedData['domestic'][0]);
-            renderList('list-global', feedData['global'][0]);
-        };
-
     </script>
 </body>
 </html>
